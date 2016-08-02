@@ -1,24 +1,37 @@
 <?php
 ini_set('display_errors', 'On');
+
 class baseEntity
 {
 
   protected $table;
   protected $conn;
+  protected $id;
+  protected $is_active;
 
   public function __construct()
   {
-
     $this->table = chop(basename(__FILE__, '.php'), "Entity");
-    //$this->table = $table;
     require_once ('./core/connection.php');
     $connection = new connection();
     $this->conn = $connection->connect();
+    $this->is_active = 1;
+    $this->id = null;
   }
 
-  public function __destruct()
+  public function getId()
   {
-    $this->conn = null;
+    return $this->id;
+  }
+
+  public function getIsActive()
+  {
+    return $this->is_active();
+  }
+
+  public function setIsActive(bool $value)
+  {
+    $this->is_active = $value;
   }
 
   public function getById($id)
@@ -52,7 +65,7 @@ class baseEntity
   {
     try
     {
-      $stmt = $this->conn->prepare("SELECT * FROM $this->table");
+      $stmt = $this->conn->prepare("SELECT * FROM $this->table WHERE is_active=1");
 
       $stmt->execute();
 
@@ -71,6 +84,12 @@ class baseEntity
       die("ERROR: " . $e->getMessage());
     }
 
+  }
+
+  public function __destruct()
+  {
+    //Cerramos la conexión
+    $this->conn = null;
   }
 
 }

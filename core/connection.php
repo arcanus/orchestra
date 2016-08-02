@@ -23,7 +23,8 @@
 
           if ($this->driver == "mysql")
           {
-            $conn = new PDO("mysql:host=$this->server_host;dbname=$this->db_name", $this->db_user, $this->db_pass);
+            $conn = new PDO("mysql:host=$this->server_host;dbname=$this->db_name;charset=$this->db_charset", $this->db_user, $this->db_pass);            
+
             //Activamos el modo error->exception de PDO:
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             return $conn;
