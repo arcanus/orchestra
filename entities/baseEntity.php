@@ -2,12 +2,15 @@
 ini_set('display_errors', 'On');
 class baseEntity
 {
-  private $table;
-  private $conn;
 
-  public function __construct($table)
+  protected $table;
+  protected $conn;
+
+  public function __construct()
   {
-    $this->table = $table;
+
+    $this->table = chop(basename(__FILE__, '.php'), "Entity");
+    //$this->table = $table;
     require_once ('./core/connection.php');
     $connection = new connection();
     $this->conn = $connection->connect();

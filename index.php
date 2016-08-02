@@ -1,17 +1,24 @@
 <?php
-  require_once 'entities/baseEntity.php';
+  require_once 'entities/userEntity.php';
 
   echo "<h1> Pagina index de prueba </h1>";
   echo "<h2> Usuarios: </h2>";
 
-  $usuarios = new baseEntity("user");
+  $users = new userEntity("user");
 
-  $lista_users = $usuarios->getAll();
+  $lista_usuarios = $users->getById(2);
 
-  foreach($lista_users as $user)
+  $users = null;
+
+  echo $lista_usuarios["username"];
+
+  /*
+  foreach($lista_usuarios as $user)
   {
     echo $user["username"] . "<br>";
   }
+
+  */
 
   /*
   $connection = new connection();
