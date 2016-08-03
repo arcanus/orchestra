@@ -49,6 +49,9 @@ class baseEntity
       //para esto usamos la constante PDO::FETCH_ASSOC
       if ($resul = $stmt->fetch(PDO::FETCH_ASSOC))
       {
+        $this->id = $resul["id"];
+        $this->is_active = $resul["is_active"];
+
         return $resul;
       }
       else
@@ -80,6 +83,50 @@ class baseEntity
       {
         return null;
       }
+    } catch (Exception $e) {
+      die("ERROR: " . $e->getMessage());
+    }
+
+  }
+
+  public function delete()
+  {
+    try
+    {
+        if (isset($this->id))
+        {
+          $stmt = $this->conn->prepare("UPDATE $this->table SET is_active = 0 WHERE id = :id");
+          $stmt->bindParam(":id", $this->id);
+
+          $stmt->execute();
+
+          return true;
+        }
+        else
+          return null;
+
+    } catch (Exception $e) {
+      die("ERROR: " . $e->getMessage());
+    }
+
+  }
+
+  public function deleteById($id)
+  {
+    try
+    {
+        if (isset($id))
+        {
+          $stmt = $this->conn->prepare("UPDATE $this->table SET is_active = 0 WHERE id = :id");
+          $stmt->bindParam(":id", $id);
+
+          $stmt->execute();
+
+          return true;
+        }
+        else
+          return null;
+
     } catch (Exception $e) {
       die("ERROR: " . $e->getMessage());
     }

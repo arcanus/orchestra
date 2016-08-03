@@ -7,21 +7,28 @@
   <body>
 
     <?php
+      ini_set('display_errors', 'On');
       require_once 'entities/userEntity.php';
 
       echo "<h1> Pagina index de prueba </h1>";
       echo "<h2> Usuarios: </h2>";
 
-      $users = new userEntity("user");
+      //$user = new userEntity();
 
-      $users->setUsername("Pepito");
-      $users->validate();
+      //$lista_usuarios = $user->getById(1);
 
-      $lista_usuarios = $users->getById(2);
+      //echo $lista_usuarios["username"] . "<br>";
 
-      $users = null;
+      $user = new userEntity();
 
-      echo $lista_usuarios["username"];
+      $user->setUsername("pepito");
+      $user->setPassword("12345");
+      $user->setRole("ROLE_USER");
+
+      if ($user->insert())
+      {
+        echo "Usuario creado: " . $user->getUsername() . "<br>";
+      }
 
      ?>
 

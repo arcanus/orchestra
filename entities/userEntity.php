@@ -41,7 +41,7 @@ class userEntity extends baseEntity
 
   public function setPassword($value)
   {
-    $this->password = $value;
+    $this->password = password_hash($value, PASSWORD_DEFAULT);
   }
 
   public function getRole()
@@ -56,7 +56,7 @@ class userEntity extends baseEntity
   //-------------------------------------------------------------------------------
 
   //---------------------------------METODOS---------------------------------------
-  public function validate()
+  private function validate()
   {
     if (
       isset($this->username)
@@ -71,6 +71,27 @@ class userEntity extends baseEntity
 
   public function insert()
   {
+    try
+    {
+        if ($this->validate())
+        {
+          $stmt = $this->conn->prepare("INSERT INTO " . $this->table .
+            "(username, password, role, is_active)
+            VALUES (:username, :password, :role, 1)");
+
+          $stmt->bindParam(":username", $this->username);
+          $stmt->bindParam(":password", $this->password);
+          $stmt->bindParam(":role", $this->role);
+
+          $stmt->execute();
+
+          return true;
+
+        }
+          return null;
+    } catch (Exception $e) {
+      die("ERROR: " . $e->getMessage());
+    }
 
   }
   //-------------------------------------------------------------------------------
