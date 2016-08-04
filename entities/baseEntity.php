@@ -1,5 +1,6 @@
 <?php
 ini_set('display_errors', 'On');
+require_once './vendor/autoload.php';
 
 class baseEntity
 {
@@ -38,16 +39,13 @@ class baseEntity
   {
     try
     {
-      $stmt = $this->conn->prepare("SELECT * FROM $this->table WHERE id = :id AND is_active = 1");
+      $fpdo = new FluentPDO($this->conn);
 
-      $stmt->bindParam(':id', $id);
+      $sql = $fpdo->from($this->table)->where("id = $id AND is_active = 1");
 
-      $stmt->execute();
+      $resul = ($sql) ? $sql->fetch() : null;
 
-      //Indicamos que queremos que nos devuelva un array asociativo
-      //con el indice basado en el nombre de la columnda.
-      //para esto usamos la constante PDO::FETCH_ASSOC
-      if ($resul = $stmt->fetch(PDO::FETCH_ASSOC))
+      if ($resul)
       {
         $this->id = $resul["id"];
         $this->is_active = $resul["is_active"];
@@ -58,34 +56,33 @@ class baseEntity
       {
         return null;
       }
+
     } catch (Exception $e) {
       die("ERROR: " . $e->getMessage());
     }
-
   }
 
   public function getAll()
   {
     try
     {
-      $stmt = $this->conn->prepare("SELECT * FROM $this->table WHERE is_active=1");
+      $fpdo = new FluentPDO($this->conn);
 
-      $stmt->execute();
+      $sql = $fpdo->from($this->table)->where('is_active = 1');
 
-      //Indicamos que queremos que nos devuelva un array asociativo
-      //con el indice basado en el nombre de la columnda.
-      //para esto usamos la constante PDO::FETCH_ASSOC
-      if ($resul = $stmt->fetchAll(PDO::FETCH_ASSOC))
+      if ($sql)
       {
-        return $resul;
+        return $sql->fetchAll();
       }
       else
       {
         return null;
       }
+
     } catch (Exception $e) {
       die("ERROR: " . $e->getMessage());
     }
+
 
   }
 
@@ -95,10 +92,13 @@ class baseEntity
     {
         if (isset($this->id))
         {
-          $stmt = $this->conn->prepare("UPDATE $this->table SET is_active = 0 WHERE id = :id");
-          $stmt->bindParam(":id", $this->id);
 
-          $stmt->execute();
+          $fpdo = new FluentPDO($this->conn);
+          $sql = $fpdo
+                      ->update($this->table)
+                      ->set(array('is_active' => 0))
+                      ->where("id = $this->id");
+          $sql->execute();
 
           return true;
         }
@@ -117,10 +117,12 @@ class baseEntity
     {
         if (isset($id))
         {
-          $stmt = $this->conn->prepare("UPDATE $this->table SET is_active = 0 WHERE id = :id");
-          $stmt->bindParam(":id", $id);
-
-          $stmt->execute();
+          $fpdo = new FluentPDO($this->conn);
+          $sql = $fpdo
+                      ->update($this->table)
+                      ->set(array('is_active' => 0))
+                      ->where("id = $id");
+          $sql->execute();
 
           return true;
         }

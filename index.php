@@ -16,10 +16,11 @@
 
       $user = new userEntity();
 
-      $lista_usuarios = $user->getById(1);
+      $user->deleteById(6);
 
-      echo $lista_usuarios["username"] . "<br>";
-      echo $lista_usuarios["username"] . "<br>";
+      //$user->getById(2);
+
+      //echo = $user->getUsername();
 
       /*
       $user = new userEntity();
