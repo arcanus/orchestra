@@ -9,16 +9,18 @@
     <?php
       ini_set('display_errors', 'On');
       require_once 'entities/userEntity.php';
+      require_once 'vendor/autoload.php';
 
       echo "<h1> Pagina index de prueba </h1>";
       echo "<h2> Usuarios: </h2>";
 
-      //$user = new userEntity();
+      $user = new userEntity();
 
-      //$lista_usuarios = $user->getById(1);
+      $lista_usuarios = $user->getById(1);
 
-      //echo $lista_usuarios["username"] . "<br>";
+      echo $lista_usuarios["username"] . "<br>";
 
+      /*
       $user = new userEntity();
 
       $user->setUsername("pepito");
@@ -29,6 +31,7 @@
       {
         echo "Usuario creado: " . $user->getUsername() . "<br>";
       }
+      */
 
      ?>
 
