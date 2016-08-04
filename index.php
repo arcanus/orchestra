@@ -19,6 +19,7 @@
       $lista_usuarios = $user->getById(1);
 
       echo $lista_usuarios["username"] . "<br>";
+      echo $lista_usuarios["username"] . "<br>";
 
       /*
       $user = new userEntity();
