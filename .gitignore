@@ -1,1 +1,5 @@
 /vendor/
+<<<<<<< HEAD
+=======
+/config/database.php
+>>>>>>> 63d42b044c36f4f01bee84e87333b6f44b79aacb
