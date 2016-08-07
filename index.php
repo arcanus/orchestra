@@ -18,16 +18,17 @@
 
       foreach ($lista_usuarios as $usuario)
       {
-        echo "<h3>" . $usuario["username"] . " ||| " . $usuario['password'] . "</h3>";
+        echo "<h3>" . $usuario['id'] . " ||| " .  $usuario["username"] . " ||| " . $usuario['password'] . "</h3>";
       }
 
       unset($lista_usuarios);
 
-      $u = userEntity::getById(1);
+      $user = userEntity::getById(1);
 
-      echo $u->getUsername();
+      echo $user->getUsername();
 
-
+      $user = null;
+      
      ?>
 
   </body>

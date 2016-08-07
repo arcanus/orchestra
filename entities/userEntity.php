@@ -16,7 +16,12 @@ class userEntity
   //-------------------------------------------------------------------------------
 
   //-------------------------------CONSTRUCTORES-----------------------------------
-
+  public function __construct()
+  {
+    $this->id = null;
+    $this->role = 'ROLE_USER';
+    $this->is_active = 1;
+  }
   //-------------------------------------------------------------------------------
 
   //-------------------------------GETERS/SETERS-----------------------------------
@@ -81,10 +86,84 @@ class userEntity
       && isset($this->role)
       && isset($this->is_active)
       )
-      return true;
+      {
+        return true;
+      }
       else
-      return false;
+      {
+        return false;
+      }
   }
+
+  //-------------------------------------------------------------------------------
+
+  public function insert()
+  {
+    try
+    {
+        if ($this->validate())
+        {
+          $conn = connection::connect();
+          $fpdo = new FluentPDO($conn);
+
+          $values = array(
+            'username'  =>  $this->username,
+            'password'  =>  $this->password,
+            'role'      =>  $this->role,
+            'is_active' =>  $this->is_active
+          );
+
+          $query = $fpdo->insertInto(self::getTableName())->values($values);
+          $resul = $query->execute();
+
+          $query = null;
+          $conn = null;
+          $fpdo = null;
+
+          $this->id = $resul;
+
+          return true;
+
+        }
+        else
+        {
+          return null;
+        }
+    } catch (Exception $e) {
+      die("ERROR: " . $e->getMessage());
+    }
+  }
+
+  public function delete()
+  {
+    try
+    {
+        if (isset($this->id))
+        {
+          $conn = connection::connect();
+          $fpdo = new FluentPDO($conn);
+          $sql = $fpdo
+                      ->update(self::getTableName())
+                      ->set(array('is_active' => 0))
+                      ->where("id", $this->id);
+
+          $sql->execute();
+
+          $sql = null;
+          $conn = null;
+          $fpdo = null;
+
+          return true;
+        }
+        else
+          return null;
+
+    } catch (Exception $e) {
+      die("ERROR: " . $e->getMessage());
+    }
+  }
+
+  //---------------------------------METODOS ESTATICOS-----------------------------
 
   private static function getTableName()
   {
@@ -152,33 +231,37 @@ class userEntity
     }
   }
 
-  public function insert()
+  public static function deleteById($id)
   {
     try
     {
-        if ($this->validate())
+        if (isset($id))
         {
           $conn = connection::connect();
-          $stmt = $conn->prepare("INSERT INTO " . self::getTableName() .
-            "(username, password, role, is_active)
-            VALUES (:username, :password, :role, 1)");
+          $fpdo = new FluentPDO($conn);
+          $sql = $fpdo
+                      ->update(self::getTableName())
+                      ->set(array('is_active' => 0))
+                      ->where("id = $id");
 
-          $stmt->bindParam(":username", $this->username);
-          $stmt->bindParam(":password", $this->password);
-          $stmt->bindParam(":role", $this->role);
+          $sql->execute();
 
-          $stmt->execute();
+          $sql = null;
+          $conn = null;
+          $fpdo = null;
 
           return true;
-
         }
+        else
           return null;
+
     } catch (Exception $e) {
       die("ERROR: " . $e->getMessage());
     }
 
   }
-  //-------------------------------------------------------------------------------
+
 }
+  //-------------------------------------------------------------------------------
 
 ?>

@@ -14,7 +14,7 @@
         self::$db_name = $db_config["database"];
         self::$db_user = $db_config["user"];
         self::$db_pass = $db_config["pass"];
-        self::$db_charset = $db_config["charset"];        
+        self::$db_charset = $db_config["charset"];
       }
 
       public static function connect()
@@ -30,6 +30,7 @@
 
             //Activamos el modo error->exception de PDO:
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $conn->query("SET NAMES " . self::$db_charset);
             return $conn;
           }
         } catch (PDOException $e) {
