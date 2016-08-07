@@ -21,14 +21,8 @@
         echo "<h3>" . $usuario['id'] . " ||| " .  $usuario["username"] . " ||| " . $usuario['password'] . "</h3>";
       }
 
-      unset($lista_usuarios);
+      $lista_usuarios = null;
 
-      $user = userEntity::getById(1);
-
-      echo $user->getUsername();
-
-      $user = null;
-      
      ?>
 
   </body>
