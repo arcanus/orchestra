@@ -9,31 +9,24 @@
     <?php
       ini_set('display_errors', 'On');
       require_once 'entities/userEntity.php';
-      require_once 'vendor/autoload.php';
 
       echo "<h1> Pagina index de prueba </h1>";
       echo "<h2> Usuarios: </h2>";
 
-      $user = new userEntity();
 
-      $user->deleteById(6);
+      $lista_usuarios = userEntity::getAll();
 
-      //$user->getById(2);
-
-      //echo = $user->getUsername();
-
-      /*
-      $user = new userEntity();
-
-      $user->setUsername("pepito");
-      $user->setPassword("12345");
-      $user->setRole("ROLE_USER");
-
-      if ($user->insert())
+      foreach ($lista_usuarios as $usuario)
       {
-        echo "Usuario creado: " . $user->getUsername() . "<br>";
+        echo "<h3>" . $usuario["username"] . " ||| " . $usuario['password'] . "</h3>";
       }
-      */
+
+      unset($lista_usuarios);
+
+      $u = userEntity::getById(1);
+
+      echo $u->getUsername();
+
 
      ?>
 

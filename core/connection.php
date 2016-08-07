@@ -3,27 +3,30 @@
 
   class connection{
 
-      private $driver;
-      private $server_host, $db_name, $db_user, $db_pass, $db_charset;
+      private static $driver;
+      private static $server_host, $db_name, $db_user, $db_pass, $db_charset;
 
-      public function __construct()
+      private static function config()
       {
-        $db_config = require_once 'config/database.php';
-        $this->driver = $db_config["driver"];
-        $this->server_host = $db_config["host"];
-        $this->db_name = $db_config["database"];
-        $this->db_user = $db_config["user"];
-        $this->db_pass = $db_config["pass"];
-        $this->db_charset = $db_config["charset"];
+        $db_config = require 'config/database.php';
+        self::$driver = $db_config["driver"];
+        self::$server_host = $db_config["host"];
+        self::$db_name = $db_config["database"];
+        self::$db_user = $db_config["user"];
+        self::$db_pass = $db_config["pass"];
+        self::$db_charset = $db_config["charset"];        
       }
 
-      public function connect()
+      public static function connect()
       {
-        try {
+        try
+        {
 
-          if ($this->driver == "mysql")
+          self::config();
+
+          if (self::$driver == "mysql")
           {
-            $conn = new PDO("mysql:host=$this->server_host;dbname=$this->db_name;charset=$this->db_charset", $this->db_user, $this->db_pass);            
+            $conn = new PDO("mysql:host=" . self::$server_host . ";dbname=" . self::$db_name . ";charset=" . self::$db_charset, self::$db_user, self::$db_pass);
 
             //Activamos el modo error->exception de PDO:
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

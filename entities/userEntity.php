@@ -1,29 +1,35 @@
 <?php
 ini_set('display_errors', 'On');
-require_once('baseEntity.php');
+require_once('core/connection.php');
+require_once('vendor/autoload.php');
 
 //Las entidades deben extender la entidad base BaseEntity
 //para así heredar sus métodos y atributos.
-class userEntity extends baseEntity
+class userEntity
 {
   //--------------------------------PROPIEDADES----------------------------------//
+  private $id;
   private $username;
   private $password;
   private $role;
+  private $is_active;
   //-------------------------------------------------------------------------------
 
   //-------------------------------CONSTRUCTORES-----------------------------------
-  public function __construct()
-  {
-    //Se debe llamar primeramente al constructor de la clase base
-    parent::__construct();
-    //Ahora configuramos el nombre de la tabla que se corresponde
-    //con la entidad
-    $this->table = chop(basename(__FILE__, '.php'), "Entity");
-  }
+
   //-------------------------------------------------------------------------------
 
   //-------------------------------GETERS/SETERS-----------------------------------
+  public function getId()
+  {
+    return $this->id;
+  }
+
+  public function setId($value)
+  {
+    $this->id = $value;
+  }
+
   public function getUsername()
   {
     return $this->username;
@@ -53,6 +59,17 @@ class userEntity extends baseEntity
   {
     $this->role = $value;
   }
+
+  public function getIs_active()
+  {
+    return $this->is_active;
+  }
+
+  public function setIs_active($value)
+  {
+    $this->is_active = $value;
+  }
+
   //-------------------------------------------------------------------------------
 
   //---------------------------------METODOS---------------------------------------
@@ -69,13 +86,80 @@ class userEntity extends baseEntity
       return false;
   }
 
+  private static function getTableName()
+  {
+    return chop(basename(__FILE__, '.php'), "Entity");
+  }
+
+  public static function getAll()
+  {
+    try
+    {
+      $conn = connection::connect();
+      $fpdo = new FluentPDO($conn);
+
+      $resul = $fpdo->from(self::getTableName())->where("is_active", 1);
+
+      $conn = null;
+      $fpdo = null;
+
+      if ($resul)
+      {
+        return $resul->fetchAll();
+      }
+      else
+      {
+        return null;
+      }
+
+    } catch (Exception $e) {
+      die("ERROR: " . $e->getMessage());
+    }
+  }
+
+  public static function getById($id)
+  {
+    try
+    {
+
+      $fpdo = new FluentPDO(connection::connect());
+
+      $resul = $fpdo->from(self::getTableName())->where("id = $id AND is_active = 1");
+
+      $conn = null;
+      $fpdo = null;
+
+      if ($resul)
+      {
+        $db_user = $resul->fetch();
+        $user = new userEntity();
+
+        $user->setId($db_user['id']);
+        $user->setUsername($db_user['username']);
+        $user->setPassword($db_user['password']);
+        $user->setRole($db_user['role']);
+        $user->setIs_active($db_user['is_active']);
+
+        return $user;
+      }
+      else
+      {
+        return null;
+      }
+
+    } catch (Exception $e) {
+      die("ERROR: " . $e->getMessage());
+    }
+  }
+
   public function insert()
   {
     try
     {
         if ($this->validate())
         {
-          $stmt = $this->conn->prepare("INSERT INTO " . $this->table .
+          $conn = connection::connect();
+          $stmt = $conn->prepare("INSERT INTO " . self::getTableName() .
             "(username, password, role, is_active)
             VALUES (:username, :password, :role, 1)");
 
