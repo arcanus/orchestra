@@ -13,6 +13,16 @@
       echo "<h1> Pagina index de prueba </h1>";
       echo "<h2> Usuarios: </h2>";
 
+      $usuario = new userEntity('Paul', '1234');
+
+      /*
+      die(var_dump($usuario));
+
+      if ($usuario->insert())
+      {
+        echo "Usuario creado! <br>";
+      }
+      */
 
       $lista_usuarios = userEntity::getAll();
 

@@ -16,11 +16,17 @@ class userEntity
   //-------------------------------------------------------------------------------
 
   //-------------------------------CONSTRUCTORES-----------------------------------
-  public function __construct()
+  public function __construct(
+    $username   = null,
+    $password   = null,
+    $role       = 'ROLE_USER'
+    )
   {
-    $this->id = null;
-    $this->role = 'ROLE_USER';
-    $this->is_active = 1;
+    $this->setId        = null;
+    $this->setUsername  = $username;
+    $this->setPassword  = $password;
+    $this->setRole      = $role;
+    $this->setIs_active = 1;
   }
   //-------------------------------------------------------------------------------
 
