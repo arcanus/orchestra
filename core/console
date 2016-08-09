@@ -1,0 +1,8 @@
+#!/usr/bin/php
+<?php
+
+$prueba = trim(fgets(STDIN));
+echo $prueba;
+echo "eso fue todo";
+
+?>
