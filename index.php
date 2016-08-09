@@ -13,22 +13,36 @@
       echo "<h1> Pagina index de prueba </h1>";
       echo "<h2> Usuarios: </h2>";
 
-      $usuario = new userEntity('Paul', '1234');
-
       /*
-      die(var_dump($usuario));
+      $usuario = new userEntity('Juancho', 'Llalalala1234', 'ROLE_ADMIN');
 
       if ($usuario->insert())
       {
         echo "Usuario creado! <br>";
       }
+      else
+      {
+        echo "No se pudo crear el usuario. <br>";
+      }
+      */
+
+      /*
+      echo "User ID: <strong>" . $usuario->getId() . " </strong> <br>";
+      echo "Username: <strong>" . $usuario->getUsername() . " </strong> <br>";
+      echo "Password: <strong>" . $usuario->getPassword() . " </strong> <br>";
+      echo "Role: <strong>" . $usuario->getRole() . " </strong> <br>";
+      echo "Is Active: <strong>" . $usuario->getIs_active() . " </strong> <br>";
       */
 
       $lista_usuarios = userEntity::getAll();
 
       foreach ($lista_usuarios as $usuario)
       {
-        echo "<h3>" . $usuario['id'] . " ||| " .  $usuario["username"] . " ||| " . $usuario['password'] . "</h3>";
+        echo "<h3>" . $usuario['id'] . " ||| " .
+        $usuario["username"] . " ||| " .
+        $usuario['password'] . " ||| " .
+        $usuario['role'] .
+        "</h3>";
       }
 
       $lista_usuarios = null;

@@ -22,11 +22,12 @@ class userEntity
     $role       = 'ROLE_USER'
     )
   {
-    $this->setId        = null;
-    $this->setUsername  = $username;
-    $this->setPassword  = $password;
-    $this->setRole      = $role;
-    $this->setIs_active = 1;
+
+    $this->setId(null);
+    $this->setUsername($username);
+    $this->setPassword($password);
+    $this->setRole($role);
+    $this->setIs_active(1);
   }
   //-------------------------------------------------------------------------------
 
