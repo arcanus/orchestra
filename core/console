@@ -59,7 +59,7 @@
 
           } while($nombre_campo != "");
 
-          $sql = "CREATE TABLE $entidad (id int NOT NULL) DEFAULT CHARSET= utf8";
+          $sql = "CREATE TABLE $entidad (id int NOT NULL) DEFAULT CHARSET= " . $config['charset'];
 
           $conn->exec($sql);
 
