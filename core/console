@@ -1,6 +1,7 @@
 #!/usr/bin/php
 <?php
   require_once 'core/connection.php';
+  require_once 'core/consoleFunctions.php';
   require_once 'vendor/autoload.php';
 
   echo shell_exec('clear');
@@ -47,7 +48,7 @@
 
               $tipo_dato = trim(fgets(STDIN));
 
-              echo "\n ¿Acepta Nulo? [si/no]: ";
+              echo "\n¿Acepta Nulo? [si/no]: ";
               $nulo = trim(fgets(STDIN));
 
               $campos[] = array(
@@ -58,6 +59,8 @@
             }
 
           } while($nombre_campo != "");
+
+          die(createEntity($entidad, $campos));
 
           $sql = "CREATE TABLE $entidad (id int NOT NULL) DEFAULT CHARSET= " . $config['charset'];
 
