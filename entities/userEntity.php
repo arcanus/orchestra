@@ -146,8 +146,8 @@ class userEntity
         {
           $conn = connection::connect();
           $fpdo = new FluentPDO($conn);
-          $sql = $fpdo
-                      ->update(self::getTableName())
+
+          $sql = $fpdo->update(self::getTableName())
                       ->set(array('is_active' => 0))
                       ->where("id", $this->id);
 
