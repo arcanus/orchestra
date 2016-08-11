@@ -102,40 +102,37 @@ class userEntity
       }
   }
 
-  //-------------------------------------------------------------------------------
-
   public function insert()
   {
     try
     {
-        if ($this->validate())
-        {
-          $conn = connection::connect();
-          $fpdo = new FluentPDO($conn);
+      if ($this->validate())
+      {
+        $conn = connection::connect();
+        $fpdo = new FluentPDO($conn);
 
-          $values = array(
-            'username'  =>  $this->username,
-            'password'  =>  $this->password,
-            'role'      =>  $this->role,
-            'is_active' =>  $this->is_active
-          );
+        $values = array(
+          'username'  =>  $this->username,
+          'password'  =>  $this->password,
+          'role'      =>  $this->role,
+          'is_active' =>  $this->is_active
+        );
 
-          $query = $fpdo->insertInto(self::getTableName())->values($values);
-          $resul = $query->execute();
+        $query = $fpdo->insertInto(self::getTableName())->values($values);
+        $resul = $query->execute();
 
-          $query = null;
-          $conn = null;
-          $fpdo = null;
+        $query = null;
+        $conn = null;
+        $fpdo = null;
 
-          $this->id = $resul;
+        $this->id = $resul;
 
-          return true;
-
-        }
-        else
-        {
-          return null;
-        }
+        return true;
+      }
+      else
+      {
+        return null;
+      }
     } catch (Exception $e) {
       die("ERROR: " . $e->getMessage());
     }

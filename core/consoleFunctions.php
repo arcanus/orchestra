@@ -83,6 +83,8 @@
 
           fwrite($file, "\t//---------------------------------METODOS---------------------------------------\n");
 
+          //COMIENZO METODO VALIDATE()
+
           fwrite($file, "\tprivate function validate()\n");
           fwrite($file, "\t{\n");
 
@@ -110,10 +112,53 @@
           fwrite($file, "\t\t\t\treturn false;\n");
           fwrite($file, "\t\t\t}\n");
 
-          fwrite($file, "\t}\n");
+          fwrite($file, "\t}\n\n");
 
+          //COMIENZO METODO INSERT()
 
+          fwrite($file, "\tprivate function insert()\n");
+          fwrite($file, "\t{\n");
 
+            fwrite($file, "\t\ttry\n");
+            fwrite($file, "\t\t{\n");
+
+              fwrite($file, "\t\t\tif (\$this->validate())\n");
+              fwrite($file, "\t\t\t{\n");
+
+                fwrite($file, "\t\t\t\t\$conn = connection::connect();\n");
+                fwrite($file, "\t\t\t\t\$fpdo = new FluentPDO(\$conn); \n\n");
+
+                fwrite($file, "\t\t\t\t\$values = array(\n");
+
+                foreach($campos as $campo)
+                {
+                  fwrite($file, "\t\t\t\t\t'" . $campo['campo'] ."' => \$this->" . $campo['campo'] . ",\n");
+                }
+
+                fwrite($file, "\t\t\t\t\t'is_active' => \$this->is_active\n");
+                fwrite($file, "\t\t\t\t);\n\n");
+
+                fwrite($file, "\t\t\t\t\$query = \$fpdo->insertInto(self::getTableName())->values(\$values); \n");
+                fwrite($file, "\t\t\t\t\$resul = \$query->execute();\n\n");
+
+                fwrite($file, "\t\t\t\t\$query = null;\n");
+                fwrite($file, "\t\t\t\t\$fpdo = null;\n");
+                fwrite($file, "\t\t\t\t\$conn = null;\n\n");
+
+                fwrite($file, "\t\t\t\t\$this->id = \$resul;\n\n");
+
+                fwrite($file, "\t\t\t\treturn true;\n");
+                fwrite($file, "\t\t\t}\n");
+                fwrite($file, "\t\t\telse\n");
+                fwrite($file, "\t\t\t{\n");
+                fwrite($file, "\t\t\t\treturn null;\n");
+                fwrite($file, "\t\t\t}\n");
+
+                fwrite($file, "\t\t} catch (Exception \$e) {\n");
+                fwrite($file, "\t\t\tdie(\"ERROR: \" . \$e->getMessage()); \n");
+                fwrite($file, "\t\t}\n");
+
+                fwrite($file, "\t}\n");
 
 
 

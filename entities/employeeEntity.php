@@ -10,21 +10,21 @@ class employeeEntity
 //--------------------------------PROPIEDADES----------------------------------//
 	private $username;
 	private $pass;
-	private $email;
+	private $role;
 //-------------------------------------------------------------------------------
 
 //-------------------------------CONSTRUCTORES-----------------------------------
 	public function __construct(
 		$username = null,
 		$pass = null,
-		$email = null,
+		$role = null,
 		)
 	{
 
 		$this->setId(null);
 		$this->setUsername($username);
 		$this->setPass($pass);
-		$this->setEmail($email);
+		$this->setRole($role);
 		$this->setIs_active(1);
 	}
 	//-------------------------------------------------------------------------------
@@ -60,14 +60,14 @@ class employeeEntity
 		$this->pass = $value;
 	}
 
-	public function getEmail()
+	public function getRole()
 	{
-		return $this->email;
+		return $this->role;
 	}
 
-	public function setEmail($value)
+	public function setRole($value)
 	{
-		$this->email = $value;
+		$this->role = $value;
 	}
 
 	public function getIs_active()
@@ -88,7 +88,7 @@ class employeeEntity
 		if (
 			isset($this->username)
 			&& isset($this->pass)
-			&& isset($this->email)
+			&& isset($this->role)
 			&& isset($this->is_active)
 			)
 			{
@@ -98,5 +98,41 @@ class employeeEntity
 			{
 				return false;
 			}
+	}
+
+	private function insert()
+	{
+		try
+		{
+			if ($this->validate())
+			{
+				$conn = connection::connect();
+				$fpdo = new FluentPDO($conn); 
+
+				$values = array(
+					'username' => $this->username,
+					'pass' => $this->pass,
+					'role' => $this->role,
+					'is_active' => $this->is_active
+				);
+
+				$query = $fpdo->insertInto(self::getTableName())->values($values); 
+				$resul = $query->execute();
+
+				$query = null
+				$fpdo = null
+				$conn = null
+
+				$this->id = $resul;
+
+				return true;
+			}
+			else
+			{
+				return null;
+			}
+		} catch (Exception $e) {
+			die("ERROR: " . $e->getMessage()); 
+		}
 	}
 }
