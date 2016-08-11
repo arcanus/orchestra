@@ -83,6 +83,40 @@
 
           fwrite($file, "\t//---------------------------------METODOS---------------------------------------\n");
 
+          fwrite($file, "\tprivate function validate()\n");
+          fwrite($file, "\t{\n");
+
+          $usar_and = false; // Variable booleana para armar las lineas siguientes
+                            // Si es true entonces la linea lleva un && al principio.
+          foreach($campos as $campo)
+          {
+            if(!$usar_and)
+              {
+                fwrite($file, "\t\tif (\n\t\t\tisset(\$this->" . $campo['campo'] . ")\n");
+                $usar_and = true;
+              }
+            else
+              fwrite($file, "\t\t\t&& isset(\$this->" . $campo['campo'] . ")\n");
+          }
+
+          fwrite($file, "\t\t\t&& isset(\$this->is_active)\n");
+
+          fwrite($file, "\t\t\t)\n");
+          fwrite($file, "\t\t\t{\n");
+          fwrite($file, "\t\t\t\treturn true;\n");
+          fwrite($file, "\t\t\t}\n");
+          fwrite($file, "\t\t\telse\n");
+          fwrite($file, "\t\t\t{\n");
+          fwrite($file, "\t\t\t\treturn false;\n");
+          fwrite($file, "\t\t\t}\n");
+
+          fwrite($file, "\t}\n");
+
+
+
+
+
+
           fwrite($file, "}\n");
           //fwrite($file, "\n");
           //fwrite($file, "\n");

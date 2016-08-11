@@ -80,4 +80,23 @@ class employeeEntity
 		$this->is_value = $value;
 	}
 
+	//-------------------------------------------------------------------------------
+
+	//---------------------------------METODOS---------------------------------------
+	private function validate()
+	{
+		if (
+			isset($this->username)
+			&& isset($this->pass)
+			&& isset($this->email)
+			&& isset($this->is_active)
+			)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+	}
 }

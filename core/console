@@ -34,12 +34,12 @@
 
           echo "Nombre de la entidad: ";
 
-          $entidad = trim(fgets(STDIN));
+          $entidad = strtolower(trim(fgets(STDIN)));
 
           do
           {
             echo "\nNombre de campo / propiedad [presione enter para finalizar]: ";
-            $nombre_campo = trim(fgets(STDIN));
+            $nombre_campo = strtolower(trim(fgets(STDIN)));
 
             if ($nombre_campo)
             {
@@ -58,7 +58,7 @@
               );
             }
 
-          } while($nombre_campo != "");
+          } while($nombre_campo);
 
           die(createEntity($entidad, $campos));
 
