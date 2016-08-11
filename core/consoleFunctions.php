@@ -15,10 +15,14 @@
           fwrite($file, "{\n");
           fwrite($file, "//--------------------------------PROPIEDADES----------------------------------//\n");
 
+          fwrite($file, "\tprivate \$id;");
+
           foreach($campos as $campo)
           {
             fwrite($file, "\tprivate \$" . $campo['campo'] . ";\n");
           }
+
+          fwrite($file, "\tprivate \$is_active;");
 
           fwrite($file, "//-------------------------------------------------------------------------------\n\n"
         . "//-------------------------------CONSTRUCTORES-----------------------------------\n");
@@ -80,7 +84,7 @@
 
           fwrite($file, "\tpublic function setIs_active(\$value)\n");
           fwrite($file, "\t{\n");
-          fwrite($file, "\t\t\$this->is_value = \$value;\n");
+          fwrite($file, "\t\t\$this->is_active = \$value;\n");
           fwrite($file, "\t}\n\n");
 
           fwrite($file, "\t//-------------------------------------------------------------------------------\n\n");
@@ -335,6 +339,76 @@
 
       }
 
+  }
+
+  function createEntityTable()
+  {
+    $config = require './config/database.php';
+    $conn = connection::connect();
+    $nombre_campo = "";
+
+    echo "Crear Nueva Entidad:\n\n";
+    echo "Desde aqui vamos a proceder a crear una nueva entidad.\n";
+    echo "Tenga en cuenta que el nombre de la entidad tiene que ser el mismo que el de la tabla a la que corresponde en la base de datos.\n";
+    echo "Los campos 'id' y 'is_active' son agregados de forma automática, por tanto no los ingrese.\n\n";
+
+    echo "Nombre de la entidad: ";
+
+    $nombre = strtolower(trim(fgets(STDIN)));
+
+    do
+    {
+      echo "\nNombre de campo / propiedad [presione enter para finalizar]: ";
+      $nombre_campo = strtolower(trim(fgets(STDIN)));
+
+      if ($nombre_campo)
+      {
+        echo "\nTipos de dato validos: VARCHAR(len), INT, TINYINT, SMALLINT, MEDIUMINT, BIGINT, FLOAT, DOUBLE, DATE, TIME, DATETIME, YEAR, TEXT, TINYTEXT, MEDIUMTEXT, LONGTEXT, ENUM('A', 'B', 'C', etc...)\n\n";
+        echo "Tipo De Dato: ";
+
+        $tipo_dato = trim(fgets(STDIN));
+
+        echo "\n¿Acepta Nulo? [si/no]: ";
+        $nulo = trim(fgets(STDIN));
+
+        $campos[] = array(
+          'campo'     =>  $nombre_campo,
+          'tipo_dato' =>  strtoupper($tipo_dato),
+          'nulo'      =>  $nulo == 'no' ? 'NOT NULL' : null
+        );
+      }
+
+    } while($nombre_campo);
+
+    $sql = "CREATE TABLE $nombre (id int NOT NULL) DEFAULT CHARSET= " . $config['charset'];
+
+    $conn->exec($sql);
+
+    foreach ($campos as $campo)
+    {
+      $sql = "ALTER TABLE $nombre ADD "
+              . $campo['campo'] . " "
+              . $campo['tipo_dato'] . " "
+              . $campo['nulo'];
+      $conn->exec($sql);
+    }
+
+    $sql = "ALTER TABLE $nombre ADD is_active BIT NOT NULL";
+    $conn->exec($sql);
+
+    $sql = "ALTER TABLE $nombre ADD PRIMARY KEY (id)";
+    $conn->exec($sql);
+
+    echo "\n\n*** TABLA CREADA CORRECTAMENTE ***\n\n";
+
+    $info_entity = array();
+
+    $info_entity = array(
+      'nombre' => $nombre,
+      'campos' => $campos
+    );
+
+    return $info_entity;
   }
 
 ?>

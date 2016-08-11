@@ -8,24 +8,24 @@ if ($global['env'] == 'dev') ini_set('display_errors', 'On');
 class employeeEntity
 {
 //--------------------------------PROPIEDADES----------------------------------//
-	private $user;
-	private $pass;
-	private $role;
-//-------------------------------------------------------------------------------
+	private $id;	private $nombre;
+	private $direccion;
+	private $telefono;
+	private $is_active;//-------------------------------------------------------------------------------
 
 //-------------------------------CONSTRUCTORES-----------------------------------
 	public function __construct(
-		$user = null,
-		$pass = null,
-		$role = null,
+		$nombre = null,
+		$direccion = null,
+		$telefono = null,
 		$is_active = 1
 		)
 	{
 
 		$this->setId(null);
-		$this->setUser($user);
-		$this->setPass($pass);
-		$this->setRole($role);
+		$this->setNombre($nombre);
+		$this->setDireccion($direccion);
+		$this->setTelefono($telefono);
 		$this->setIs_active(1);
 	}
 	//-------------------------------------------------------------------------------
@@ -41,34 +41,34 @@ class employeeEntity
 		$this->id = $value;
 	}
 
-	public function getUser()
+	public function getNombre()
 	{
-		return $this->user;
+		return $this->nombre;
 	}
 
-	public function setUser($value)
+	public function setNombre($value)
 	{
-		$this->user = $value;
+		$this->nombre = $value;
 	}
 
-	public function getPass()
+	public function getDireccion()
 	{
-		return $this->pass;
+		return $this->direccion;
 	}
 
-	public function setPass($value)
+	public function setDireccion($value)
 	{
-		$this->pass = $value;
+		$this->direccion = $value;
 	}
 
-	public function getRole()
+	public function getTelefono()
 	{
-		return $this->role;
+		return $this->telefono;
 	}
 
-	public function setRole($value)
+	public function setTelefono($value)
 	{
-		$this->role = $value;
+		$this->telefono = $value;
 	}
 
 	public function getIs_active()
@@ -78,7 +78,7 @@ class employeeEntity
 
 	public function setIs_active($value)
 	{
-		$this->is_value = $value;
+		$this->is_active = $value;
 	}
 
 	//-------------------------------------------------------------------------------
@@ -87,9 +87,9 @@ class employeeEntity
 	private function validate()
 	{
 		if (
-			isset($this->user)
-			&& isset($this->pass)
-			&& isset($this->role)
+			isset($this->nombre)
+			&& isset($this->direccion)
+			&& isset($this->telefono)
 			&& isset($this->is_active)
 			)
 			{
@@ -108,16 +108,16 @@ class employeeEntity
 			if ($this->validate())
 			{
 				$conn = connection::connect();
-				$fpdo = new FluentPDO($conn); 
+				$fpdo = new FluentPDO($conn);
 
 				$values = array(
-					'user' => $this->user,
-					'pass' => $this->pass,
-					'role' => $this->role,
+					'nombre' => $this->nombre,
+					'direccion' => $this->direccion,
+					'telefono' => $this->telefono,
 					'is_active' => $this->is_active
 				);
 
-				$query = $fpdo->insertInto(self::getTableName())->values($values); 
+				$query = $fpdo->insertInto(self::getTableName())->values($values);
 				$resul = $query->execute();
 
 				$query = null;
@@ -133,7 +133,7 @@ class employeeEntity
 				return null;
 			}
 		} catch (Exception $e) {
-			die("ERROR: " . $e->getMessage()); 
+			die("ERROR: " . $e->getMessage());
 		}
 	}
 
@@ -144,7 +144,7 @@ class employeeEntity
 			if (isset($this->id))
 			{
 				$conn = connection::connect();
-				$fpdo = new FluentPDO($conn); 
+				$fpdo = new FluentPDO($conn);
 
 				$sql = $fpdo->update(self::getTableName())
 										->set(array('is_active' => 0))
@@ -163,7 +163,7 @@ class employeeEntity
 				return null;
 			}
 		} catch (Exception $e) {
-			die("ERROR: " . $e->getMessage()); 
+			die("ERROR: " . $e->getMessage());
 		}
 	}
 
@@ -178,7 +178,7 @@ class employeeEntity
 		try
 		{
 			$conn = connection::connect();
-			$fpdo = new FluentPDO($conn); 
+			$fpdo = new FluentPDO($conn);
 
 			$resul = $fpdo->from(self::getTableName())->where('is_active', 1);
 			$fpdo = null;
@@ -193,7 +193,7 @@ class employeeEntity
 				return null;
 			}
 		} catch (Exception $e) {
-			die("ERROR: " . $e->getMessage()); 
+			die("ERROR: " . $e->getMessage());
 		}
 	}
 
@@ -202,7 +202,7 @@ class employeeEntity
 		try
 		{
 			$conn = connection::connect();
-			$fpdo = new FluentPDO($conn); 
+			$fpdo = new FluentPDO($conn);
 
 			$resul = $fpdo->from(self::getTableName())->where('id = $id AND is_active = 1');
 
@@ -211,14 +211,14 @@ class employeeEntity
 
 			if($resul)
 			{
-				$db_user = $resul->fetch(); 
-				$user = new userEntity(); 
+				$db_user = $resul->fetch();
+				$user = new userEntity();
 
-				$user->setId($db_user['id']); 
-				$user->setUser($db_user['user']); 
-				$user->setPass($db_user['pass']); 
-				$user->setRole($db_user['role']); 
-				$user->is_active($db_user['is_active']); 
+				$user->setId($db_user['id']);
+				$user->setNombre($db_user['nombre']);
+				$user->setDireccion($db_user['direccion']);
+				$user->setTelefono($db_user['telefono']);
+				$user->is_active($db_user['is_active']);
 
 				return $user;
 			}
@@ -227,7 +227,7 @@ class employeeEntity
 				return null;
 			}
 		} catch (Exception $e) {
-			die("ERROR: " . $e->getMessage()); 
+			die("ERROR: " . $e->getMessage());
 		}
 	}
 
@@ -237,12 +237,13 @@ class employeeEntity
 		{
 			if (isset($id))
 			{
+
 				$conn = connection::connect();
-				$fpdo = new FluentPDO($conn); 
+				$fpdo = new FluentPDO($conn);
 
 				$sql = $fpdo->update(self::getTableName())
 										->set(array('is_active' => 0))
-										->where('id', $id);
+										->where("id = $id");
 
 				$sql->execute();
 
@@ -257,7 +258,7 @@ class employeeEntity
 				return null;
 			}
 		} catch (Exception $e) {
-			die("ERROR: " . $e->getMessage()); 
+			die("ERROR: " . $e->getMessage());
 		}
 	}
 

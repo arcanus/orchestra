@@ -22,64 +22,15 @@
       {
         case 'create:entity':
 
-          $config = require './config/database.php';
-          $conn = connection::connect();
-          $campos = array();
-          $nombre_campo = "";
+          $info_entity = createEntityTable();
 
-          echo "Crear Nueva Entidad:\n\n";
-          echo "Desde aqui vamos a proceder a crear una nueva entidad.\n";
-          echo "Tenga en cuenta que el nombre de la entidad tiene que ser el mismo que el de la tabla a la que corresponde en la base de datos.\n";
-          echo "Los campos 'id' y 'is_active' son agregados de forma automática, por tanto no los ingrese.\n\n";
-
-          echo "Nombre de la entidad: ";
-
-          $entidad = strtolower(trim(fgets(STDIN)));
-
-          do
+          if($info_entity)
           {
-            echo "\nNombre de campo / propiedad [presione enter para finalizar]: ";
-            $nombre_campo = strtolower(trim(fgets(STDIN)));
-
-            if ($nombre_campo)
-            {
-              echo "\nTipos de dato validos: VARCHAR(len), INT, TINYINT, SMALLINT, MEDIUMINT, BIGINT, FLOAT, DOUBLE, DATE, TIME, DATETIME, YEAR, TEXT, TINYTEXT, MEDIUMTEXT, LONGTEXT, ENUM('A', 'B', 'C', etc...)\n\n";
-              echo "Tipo De Dato: ";
-
-              $tipo_dato = trim(fgets(STDIN));
-
-              echo "\n¿Acepta Nulo? [si/no]: ";
-              $nulo = trim(fgets(STDIN));
-
-              $campos[] = array(
-                'campo'     =>  $nombre_campo,
-                'tipo_dato' =>  strtoupper($tipo_dato),
-                'nulo'      =>  $nulo == 'no' ? 'NOT NULL' : null
-              );
-            }
-
-          } while($nombre_campo);          
-
-          $sql = "CREATE TABLE $entidad (id int NOT NULL) DEFAULT CHARSET= " . $config['charset'];
-
-          $conn->exec($sql);
-
-          foreach ($campos as $campo)
-          {
-            $sql = "ALTER TABLE $entidad ADD "
-                    . $campo['campo'] . " "
-                    . $campo['tipo_dato'] . " "
-                    . $campo['nulo'];
-            $conn->exec($sql);
+            echo "Ahora vamos a crear el archivo de entidad.\n\n";
+            echo "Presione una tecla para continuar...";
+            fgets(STDIN);
+            createEntity($info_entity['nombre'], $info_entity['campos']);
           }
-
-          $sql = "ALTER TABLE $entidad ADD is_active BIT NOT NULL";
-          $conn->exec($sql);
-
-          $sql = "ALTER TABLE $entidad ADD PRIMARY KEY (id)";
-          $conn->exec($sql);
-
-          echo "\n\n*** TABLA CREADA CORRECTAMENTE ***\n\n";
 
           break;
       }

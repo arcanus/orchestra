@@ -47,8 +47,18 @@
 
       $lista_usuarios = null;
 
-      require_once './entities/employeeEntity.php';
-      $employee = new employeeEntity();
+      require_once 'entities/employeeEntity.php';
+
+      /*
+      $employee = new employeeEntity("Pedro", "lalala 2222", "564654", 1);
+      $employee->insert();
+
+      echo $employee->getId();*/
+      
+
+      employeeEntity::deleteById(0);
+
+      echo "Usuario borrado"
 
      ?>
 
