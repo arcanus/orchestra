@@ -47,6 +47,9 @@
 
       $lista_usuarios = null;
 
+      require_once './entities/employeeEntity.php';
+      $employee = new employeeEntity();
+
      ?>
 
   </body>

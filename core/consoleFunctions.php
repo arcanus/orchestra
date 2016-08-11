@@ -6,9 +6,9 @@
       {
           $file = fopen('entities/' . $nombre . "Entity.php", 'w') or die('No se puede crear la entidad.');
           fwrite($file, "<?php\n");
-          fwrite($file, "ini_set('display_errors', 'On');\n");
           fwrite($file, "require_once('core/connection.php');\n");
-          fwrite($file, "require_once('vendor/autoload.php');\n\n");
+          fwrite($file, "require_once('vendor/autoload.php');\n");
+          fwrite($file, "if (\$global['env'] == 'dev') ini_set('display_errors', 'On');\n\n");
           fwrite($file, "//Las entidades deben extender la entidad base BaseEntity\n");
           fwrite($file, "//para así heredar sus métodos y atributos.\n");
           fwrite($file, "class $nombre" . "Entity\n");
@@ -21,14 +21,18 @@
           }
 
           fwrite($file, "//-------------------------------------------------------------------------------\n\n"
-                        . "//-------------------------------CONSTRUCTORES-----------------------------------\n");
+        . "//-------------------------------CONSTRUCTORES-----------------------------------\n");
 
           fwrite($file, "\tpublic function __construct(\n");
+
+          $poner_coma = true; //Variable para saber si llevan coma los argumentos
 
           foreach($campos as $campo)
           {
             fwrite($file, "\t\t\$" . $campo['campo'] . " = null,\n");
           }
+
+          fwrite($file, "\t\t\$is_active = 1\n");
 
           fwrite($file, "\t\t)\n");
           fwrite($file, "\t{\n\n");
@@ -180,7 +184,7 @@
 
           fwrite($file, "\t\t\t\t\$sql->execute();\n\n");
 
-          fwrite($file, "\t\t\t\t\$query = null;\n");
+          fwrite($file, "\t\t\t\t\$sql = null;\n");
           fwrite($file, "\t\t\t\t\$fpdo = null;\n");
           fwrite($file, "\t\t\t\t\$conn = null;\n\n");
 
@@ -239,14 +243,88 @@
 
           fwrite($file, "\t}\n\n");
 
+          //COMIENZO METODO getById
 
+          fwrite($file, "\tpublic static function getById(\$id)\n");
+          fwrite($file, "\t{\n");
+
+          fwrite($file, "\t\ttry\n");
+          fwrite($file, "\t\t{\n");
+
+          fwrite($file, "\t\t\t\$conn = connection::connect();\n");
+          fwrite($file, "\t\t\t\$fpdo = new FluentPDO(\$conn); \n\n");
+
+          fwrite($file, "\t\t\t\$resul = \$fpdo->from(self::getTableName())->where('id = \$id AND is_active = 1');\n\n");
+
+          fwrite($file, "\t\t\t\$fpdo = null;\n");
+          fwrite($file, "\t\t\t\$conn = null;\n\n");
+
+          fwrite($file, "\t\t\tif(\$resul)\n");
+          fwrite($file, "\t\t\t{\n");
+
+          fwrite($file, "\t\t\t\t\$db_user = \$resul->fetch(); \n");
+          fwrite($file, "\t\t\t\t\$user = new userEntity(); \n\n");
+          fwrite($file, "\t\t\t\t\$user->setId(\$db_user['id']); \n");
+
+          foreach($campos as $campo)
+          {
+            fwrite($file, "\t\t\t\t\$user->set" . ucfirst($campo['campo']) . "(\$db_user['" . $campo['campo'] . "']); \n");
+          }
+
+          fwrite($file, "\t\t\t\t\$user->is_active(\$db_user['is_active']); \n\n");
+
+          fwrite($file, "\t\t\t\treturn \$user;\n");
+
+          fwrite($file, "\t\t\t}\n");
+          fwrite($file, "\t\t\telse\n");
+          fwrite($file, "\t\t\t{\n");
+          fwrite($file, "\t\t\t\treturn null;\n");
+          fwrite($file, "\t\t\t}\n");
+
+          fwrite($file, "\t\t} catch (Exception \$e) {\n");
+          fwrite($file, "\t\t\tdie(\"ERROR: \" . \$e->getMessage()); \n");
+          fwrite($file, "\t\t}\n");
+
+          fwrite($file, "\t}\n\n");
+
+          //COMIENZO METODO deleteById
+
+          fwrite($file, "\tpublic static function deleteById(\$id)\n");
+          fwrite($file, "\t{\n");
+
+          fwrite($file, "\t\ttry\n");
+          fwrite($file, "\t\t{\n");
+
+          fwrite($file, "\t\t\tif (isset(\$id))\n");
+          fwrite($file, "\t\t\t{\n");
+
+          fwrite($file, "\t\t\t\t\$conn = connection::connect();\n");
+          fwrite($file, "\t\t\t\t\$fpdo = new FluentPDO(\$conn); \n\n");
+
+          fwrite($file, "\t\t\t\t\$sql = \$fpdo->update(self::getTableName())\n");
+          fwrite($file, "\t\t\t\t\t\t\t\t\t\t->set(array('is_active' => 0))\n");
+          fwrite($file, "\t\t\t\t\t\t\t\t\t\t->where('id', \$id);\n\n");
+
+          fwrite($file, "\t\t\t\t\$sql->execute();\n\n");
+
+          fwrite($file, "\t\t\t\t\$sql = null;\n");
+          fwrite($file, "\t\t\t\t\$fpdo = null;\n");
+          fwrite($file, "\t\t\t\t\$conn = null;\n\n");
+
+          fwrite($file, "\t\t\t\treturn true;\n");
+          fwrite($file, "\t\t\t}\n");
+          fwrite($file, "\t\t\telse\n");
+          fwrite($file, "\t\t\t{\n");
+          fwrite($file, "\t\t\t\treturn null;\n");
+          fwrite($file, "\t\t\t}\n");
+
+          fwrite($file, "\t\t} catch (Exception \$e) {\n");
+          fwrite($file, "\t\t\tdie(\"ERROR: \" . \$e->getMessage()); \n");
+          fwrite($file, "\t\t}\n");
+
+          fwrite($file, "\t}\n\n");
 
           fwrite($file, "}\n");
-          //fwrite($file, "\n");
-          //fwrite($file, "\n");
-          //fwrite($file, "\n");
-          //fwrite($file, "\n");
-
 
 
           fclose($file);

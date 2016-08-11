@@ -262,7 +262,6 @@ class userEntity
     } catch (Exception $e) {
       die("ERROR: " . $e->getMessage());
     }
-
   }
 
 }

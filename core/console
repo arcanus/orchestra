@@ -12,7 +12,7 @@
       echo "Bienvenido a la consola interactiva:\n\n";
       echo "USO:\n";
       echo "****\n";
-      echo "Crear Nueva Entidad:  php core/console createEntity\n";
+      echo "Crear Nueva Entidad:  php core/console create:entity\n";
 
       echo "\n\n";
       break;
@@ -20,7 +20,7 @@
     case '2':
       switch ($argv[1])
       {
-        case 'createEntity':
+        case 'create:entity':
 
           $config = require './config/database.php';
           $conn = connection::connect();
@@ -58,9 +58,7 @@
               );
             }
 
-          } while($nombre_campo);
-
-          die(createEntity($entidad, $campos));
+          } while($nombre_campo);          
 
           $sql = "CREATE TABLE $entidad (id int NOT NULL) DEFAULT CHARSET= " . $config['charset'];
 

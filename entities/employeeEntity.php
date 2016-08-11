@@ -1,27 +1,31 @@
 <?php
-ini_set('display_errors', 'On');
 require_once('core/connection.php');
 require_once('vendor/autoload.php');
+if ($global['env'] == 'dev') ini_set('display_errors', 'On');
 
 //Las entidades deben extender la entidad base BaseEntity
 //para así heredar sus métodos y atributos.
 class employeeEntity
 {
 //--------------------------------PROPIEDADES----------------------------------//
-	private $name;
+	private $user;
 	private $pass;
+	private $role;
 //-------------------------------------------------------------------------------
 
 //-------------------------------CONSTRUCTORES-----------------------------------
 	public function __construct(
-		$name = null,
+		$user = null,
 		$pass = null,
+		$role = null,
+		$is_active = 1
 		)
 	{
 
 		$this->setId(null);
-		$this->setName($name);
+		$this->setUser($user);
 		$this->setPass($pass);
+		$this->setRole($role);
 		$this->setIs_active(1);
 	}
 	//-------------------------------------------------------------------------------
@@ -37,14 +41,14 @@ class employeeEntity
 		$this->id = $value;
 	}
 
-	public function getName()
+	public function getUser()
 	{
-		return $this->name;
+		return $this->user;
 	}
 
-	public function setName($value)
+	public function setUser($value)
 	{
-		$this->name = $value;
+		$this->user = $value;
 	}
 
 	public function getPass()
@@ -55,6 +59,16 @@ class employeeEntity
 	public function setPass($value)
 	{
 		$this->pass = $value;
+	}
+
+	public function getRole()
+	{
+		return $this->role;
+	}
+
+	public function setRole($value)
+	{
+		$this->role = $value;
 	}
 
 	public function getIs_active()
@@ -73,8 +87,9 @@ class employeeEntity
 	private function validate()
 	{
 		if (
-			isset($this->name)
+			isset($this->user)
 			&& isset($this->pass)
+			&& isset($this->role)
 			&& isset($this->is_active)
 			)
 			{
@@ -93,15 +108,16 @@ class employeeEntity
 			if ($this->validate())
 			{
 				$conn = connection::connect();
-				$fpdo = new FluentPDO($conn);
+				$fpdo = new FluentPDO($conn); 
 
 				$values = array(
-					'name' => $this->name,
+					'user' => $this->user,
 					'pass' => $this->pass,
+					'role' => $this->role,
 					'is_active' => $this->is_active
 				);
 
-				$query = $fpdo->insertInto(self::getTableName())->values($values);
+				$query = $fpdo->insertInto(self::getTableName())->values($values); 
 				$resul = $query->execute();
 
 				$query = null;
@@ -117,7 +133,7 @@ class employeeEntity
 				return null;
 			}
 		} catch (Exception $e) {
-			die("ERROR: " . $e->getMessage());
+			die("ERROR: " . $e->getMessage()); 
 		}
 	}
 
@@ -128,7 +144,7 @@ class employeeEntity
 			if (isset($this->id))
 			{
 				$conn = connection::connect();
-				$fpdo = new FluentPDO($conn);
+				$fpdo = new FluentPDO($conn); 
 
 				$sql = $fpdo->update(self::getTableName())
 										->set(array('is_active' => 0))
@@ -136,7 +152,7 @@ class employeeEntity
 
 				$sql->execute();
 
-				$query = null;
+				$sql = null;
 				$fpdo = null;
 				$conn = null;
 
@@ -147,7 +163,7 @@ class employeeEntity
 				return null;
 			}
 		} catch (Exception $e) {
-			die("ERROR: " . $e->getMessage());
+			die("ERROR: " . $e->getMessage()); 
 		}
 	}
 
@@ -162,7 +178,7 @@ class employeeEntity
 		try
 		{
 			$conn = connection::connect();
-			$fpdo = new FluentPDO($conn);
+			$fpdo = new FluentPDO($conn); 
 
 			$resul = $fpdo->from(self::getTableName())->where('is_active', 1);
 			$fpdo = null;
@@ -177,7 +193,71 @@ class employeeEntity
 				return null;
 			}
 		} catch (Exception $e) {
-			die("ERROR: " . $e->getMessage());
+			die("ERROR: " . $e->getMessage()); 
+		}
+	}
+
+	public static function getById($id)
+	{
+		try
+		{
+			$conn = connection::connect();
+			$fpdo = new FluentPDO($conn); 
+
+			$resul = $fpdo->from(self::getTableName())->where('id = $id AND is_active = 1');
+
+			$fpdo = null;
+			$conn = null;
+
+			if($resul)
+			{
+				$db_user = $resul->fetch(); 
+				$user = new userEntity(); 
+
+				$user->setId($db_user['id']); 
+				$user->setUser($db_user['user']); 
+				$user->setPass($db_user['pass']); 
+				$user->setRole($db_user['role']); 
+				$user->is_active($db_user['is_active']); 
+
+				return $user;
+			}
+			else
+			{
+				return null;
+			}
+		} catch (Exception $e) {
+			die("ERROR: " . $e->getMessage()); 
+		}
+	}
+
+	public static function deleteById($id)
+	{
+		try
+		{
+			if (isset($id))
+			{
+				$conn = connection::connect();
+				$fpdo = new FluentPDO($conn); 
+
+				$sql = $fpdo->update(self::getTableName())
+										->set(array('is_active' => 0))
+										->where('id', $id);
+
+				$sql->execute();
+
+				$sql = null;
+				$fpdo = null;
+				$conn = null;
+
+				return true;
+			}
+			else
+			{
+				return null;
+			}
+		} catch (Exception $e) {
+			die("ERROR: " . $e->getMessage()); 
 		}
 	}
 
