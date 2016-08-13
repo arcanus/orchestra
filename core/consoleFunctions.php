@@ -15,14 +15,14 @@
           fwrite($file, "{\n");
           fwrite($file, "//--------------------------------PROPIEDADES----------------------------------//\n");
 
-          fwrite($file, "\tprivate \$id;");
+          fwrite($file, "\tprivate \$id;\n");
 
           foreach($campos as $campo)
           {
             fwrite($file, "\tprivate \$" . $campo['campo'] . ";\n");
           }
 
-          fwrite($file, "\tprivate \$is_active;");
+          fwrite($file, "\tprivate \$is_active;\n");
 
           fwrite($file, "//-------------------------------------------------------------------------------\n\n"
         . "//-------------------------------CONSTRUCTORES-----------------------------------\n");
@@ -36,7 +36,7 @@
             fwrite($file, "\t\t\$" . $campo['campo'] . " = null,\n");
           }
 
-          fwrite($file, "\t\t\$is_active = 1\n");
+          fwrite($file, "\t\t\$is_active = true\n");
 
           fwrite($file, "\t\t)\n");
           fwrite($file, "\t{\n\n");
@@ -48,7 +48,7 @@
             fwrite($file, "\t\t\$this->set" . ucFirst($campo['campo']) .  "(\$" . $campo['campo'] . ");\n");
           }
 
-          fwrite($file, "\t\t\$this->setIs_active(1);\n");
+          fwrite($file, "\t\t\$this->setIs_active(\$is_active);\n");
           fwrite($file, "\t}\n");
           fwrite($file, "\t//-------------------------------------------------------------------------------\n\n");
 
@@ -102,11 +102,19 @@
           {
             if(!$usar_and)
               {
-                fwrite($file, "\t\tif (\n\t\t\tisset(\$this->" . $campo['campo'] . ")\n");
-                $usar_and = true;
+                if($campo['nulo'])
+                {
+                  fwrite($file, "\t\tif (\n\t\t\tisset(\$this->" . $campo['campo'] . ")\n");
+                  $usar_and = true;
+                }
               }
             else
-              fwrite($file, "\t\t\t&& isset(\$this->" . $campo['campo'] . ")\n");
+              {
+                if($campo['nulo'])
+                {
+                  fwrite($file, "\t\t\t&& isset(\$this->" . $campo['campo'] . ")\n");
+                }
+              }
           }
 
           fwrite($file, "\t\t\t&& isset(\$this->is_active)\n");
@@ -183,7 +191,7 @@
           fwrite($file, "\t\t\t\t\$fpdo = new FluentPDO(\$conn); \n\n");
 
           fwrite($file, "\t\t\t\t\$sql = \$fpdo->update(self::getTableName())\n");
-          fwrite($file, "\t\t\t\t\t\t\t\t\t\t->set(array('is_active' => 0))\n");
+          fwrite($file, "\t\t\t\t\t\t\t\t\t\t->set(array('is_active' => false))\n");
           fwrite($file, "\t\t\t\t\t\t\t\t\t\t->where('id', \$this->id);\n\n");
 
           fwrite($file, "\t\t\t\t\$sql->execute();\n\n");
@@ -258,7 +266,7 @@
           fwrite($file, "\t\t\t\$conn = connection::connect();\n");
           fwrite($file, "\t\t\t\$fpdo = new FluentPDO(\$conn); \n\n");
 
-          fwrite($file, "\t\t\t\$resul = \$fpdo->from(self::getTableName())->where('id = \$id AND is_active = 1');\n\n");
+          fwrite($file, "\t\t\t\$resul = \$fpdo->from(self::getTableName())->where(\"id = \$id AND is_active = true\");\n\n");
 
           fwrite($file, "\t\t\t\$fpdo = null;\n");
           fwrite($file, "\t\t\t\$conn = null;\n\n");
@@ -267,17 +275,17 @@
           fwrite($file, "\t\t\t{\n");
 
           fwrite($file, "\t\t\t\t\$db_user = \$resul->fetch(); \n");
-          fwrite($file, "\t\t\t\t\$user = new userEntity(); \n\n");
-          fwrite($file, "\t\t\t\t\$user->setId(\$db_user['id']); \n");
+          fwrite($file, "\t\t\t\t\$" . $nombre .  " = new " . $nombre . "Entity(); \n\n");
+          fwrite($file, "\t\t\t\t\$" . $nombre . "->setId(\$db_user['id']); \n");
 
           foreach($campos as $campo)
           {
-            fwrite($file, "\t\t\t\t\$user->set" . ucfirst($campo['campo']) . "(\$db_user['" . $campo['campo'] . "']); \n");
+            fwrite($file, "\t\t\t\t\$" . $nombre . "->set" . ucfirst($campo['campo']) . "(\$db_user['" . $campo['campo'] . "']); \n");
           }
 
-          fwrite($file, "\t\t\t\t\$user->is_active(\$db_user['is_active']); \n\n");
+          fwrite($file, "\t\t\t\t\$" . $nombre . "->setIs_active(\$db_user['is_active']); \n\n");
 
-          fwrite($file, "\t\t\t\treturn \$user;\n");
+          fwrite($file, "\t\t\t\treturn \$" . $nombre . ";\n");
 
           fwrite($file, "\t\t\t}\n");
           fwrite($file, "\t\t\telse\n");
@@ -306,7 +314,7 @@
           fwrite($file, "\t\t\t\t\$fpdo = new FluentPDO(\$conn); \n\n");
 
           fwrite($file, "\t\t\t\t\$sql = \$fpdo->update(self::getTableName())\n");
-          fwrite($file, "\t\t\t\t\t\t\t\t\t\t->set(array('is_active' => 0))\n");
+          fwrite($file, "\t\t\t\t\t\t\t\t\t\t->set(array('is_active' => false))\n");
           fwrite($file, "\t\t\t\t\t\t\t\t\t\t->where('id', \$id);\n\n");
 
           fwrite($file, "\t\t\t\t\$sql->execute();\n\n");
@@ -380,7 +388,7 @@
 
     } while($nombre_campo);
 
-    $sql = "CREATE TABLE $nombre (id int NOT NULL) DEFAULT CHARSET= " . $config['charset'];
+    $sql = "CREATE TABLE $nombre (id int NOT NULL AUTO_INCREMENT, PRIMARY KEY (id)) DEFAULT CHARSET= " . $config['charset'];
 
     $conn->exec($sql);
 
@@ -396,8 +404,8 @@
     $sql = "ALTER TABLE $nombre ADD is_active BIT NOT NULL";
     $conn->exec($sql);
 
-    $sql = "ALTER TABLE $nombre ADD PRIMARY KEY (id)";
-    $conn->exec($sql);
+    //$sql = "ALTER TABLE $nombre ADD PRIMARY KEY (id)";
+    //$conn->exec($sql);
 
     echo "\n\n*** TABLA CREADA CORRECTAMENTE ***\n\n";
 

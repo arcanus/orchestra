@@ -49,16 +49,42 @@
 
       require_once 'entities/employeeEntity.php';
 
-      /*
-      $employee = new employeeEntity("Pedro", "lalala 2222", "564654", 1);
+
+      /*$employee = new employeeEntity("Pedro", "lalala 2222", "564654","9999");
       $employee->insert();
+      $employee = null;
+      */
+      /*
+      $employee = new employeeEntity();
 
-      echo $employee->getId();*/
-      
+      $employee->setFullname("pepe el empleado");
+      $employee->setAdress("la conchinchina 359");
+      $employee->setPhone("555-7755632");
+      $employee->setLegajo("23796");
 
-      employeeEntity::deleteById(0);
 
-      echo "Usuario borrado"
+      if($employee->insert())
+      {
+        echo "Empleado creado exitosamente! <br> <br>";
+      }
+
+      */
+
+      $lista_empleados = employeeEntity::getAll();
+
+      foreach ($lista_empleados as $empleado)
+      {
+        echo "<h3>" . $empleado['id'] . " ||| " .
+        $empleado["fullname"] . " ||| " .
+        $empleado['adress'] . " ||| " .
+        $empleado['phone'] . " ||| " .
+        $empleado['legajo'] .
+        "</h3>";
+      }
+
+      $lista_usuarios = null;
+
+
 
      ?>
 

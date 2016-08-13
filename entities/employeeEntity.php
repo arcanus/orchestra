@@ -8,25 +8,30 @@ if ($global['env'] == 'dev') ini_set('display_errors', 'On');
 class employeeEntity
 {
 //--------------------------------PROPIEDADES----------------------------------//
-	private $id;	private $nombre;
-	private $direccion;
-	private $telefono;
-	private $is_active;//-------------------------------------------------------------------------------
+	private $id;
+	private $fullname;
+	private $adress;
+	private $phone;
+	private $legajo;
+	private $is_active;
+//-------------------------------------------------------------------------------
 
 //-------------------------------CONSTRUCTORES-----------------------------------
 	public function __construct(
-		$nombre = null,
-		$direccion = null,
-		$telefono = null,
-		$is_active = 1
+		$fullname = null,
+		$adress = null,
+		$phone = null,
+		$legajo = null,
+		$is_active = true
 		)
 	{
 
 		$this->setId(null);
-		$this->setNombre($nombre);
-		$this->setDireccion($direccion);
-		$this->setTelefono($telefono);
-		$this->setIs_active(1);
+		$this->setFullname($fullname);
+		$this->setAdress($adress);
+		$this->setPhone($phone);
+		$this->setLegajo($legajo);
+		$this->setIs_active($is_active);
 	}
 	//-------------------------------------------------------------------------------
 
@@ -41,34 +46,44 @@ class employeeEntity
 		$this->id = $value;
 	}
 
-	public function getNombre()
+	public function getFullname()
 	{
-		return $this->nombre;
+		return $this->fullname;
 	}
 
-	public function setNombre($value)
+	public function setFullname($value)
 	{
-		$this->nombre = $value;
+		$this->fullname = $value;
 	}
 
-	public function getDireccion()
+	public function getAdress()
 	{
-		return $this->direccion;
+		return $this->adress;
 	}
 
-	public function setDireccion($value)
+	public function setAdress($value)
 	{
-		$this->direccion = $value;
+		$this->adress = $value;
 	}
 
-	public function getTelefono()
+	public function getPhone()
 	{
-		return $this->telefono;
+		return $this->phone;
 	}
 
-	public function setTelefono($value)
+	public function setPhone($value)
 	{
-		$this->telefono = $value;
+		$this->phone = $value;
+	}
+
+	public function getLegajo()
+	{
+		return $this->legajo;
+	}
+
+	public function setLegajo($value)
+	{
+		$this->legajo = $value;
 	}
 
 	public function getIs_active()
@@ -87,9 +102,8 @@ class employeeEntity
 	private function validate()
 	{
 		if (
-			isset($this->nombre)
-			&& isset($this->direccion)
-			&& isset($this->telefono)
+			isset($this->fullname)
+			&& isset($this->legajo)
 			&& isset($this->is_active)
 			)
 			{
@@ -111,9 +125,10 @@ class employeeEntity
 				$fpdo = new FluentPDO($conn);
 
 				$values = array(
-					'nombre' => $this->nombre,
-					'direccion' => $this->direccion,
-					'telefono' => $this->telefono,
+					'fullname' => $this->fullname,
+					'adress' => $this->adress,
+					'phone' => $this->phone,
+					'legajo' => $this->legajo,
 					'is_active' => $this->is_active
 				);
 
@@ -147,7 +162,7 @@ class employeeEntity
 				$fpdo = new FluentPDO($conn);
 
 				$sql = $fpdo->update(self::getTableName())
-										->set(array('is_active' => 0))
+										->set(array('is_active' => false))
 										->where('id', $this->id);
 
 				$sql->execute();
@@ -204,7 +219,7 @@ class employeeEntity
 			$conn = connection::connect();
 			$fpdo = new FluentPDO($conn);
 
-			$resul = $fpdo->from(self::getTableName())->where('id = $id AND is_active = 1');
+			$resul = $fpdo->from(self::getTableName())->where("id = $id AND is_active = true");
 
 			$fpdo = null;
 			$conn = null;
@@ -212,15 +227,16 @@ class employeeEntity
 			if($resul)
 			{
 				$db_user = $resul->fetch();
-				$user = new userEntity();
+				$employee = new employeeEntity();
 
-				$user->setId($db_user['id']);
-				$user->setNombre($db_user['nombre']);
-				$user->setDireccion($db_user['direccion']);
-				$user->setTelefono($db_user['telefono']);
-				$user->is_active($db_user['is_active']);
+				$employee->setId($db_user['id']);
+				$employee->setFullname($db_user['fullname']);
+				$employee->setAdress($db_user['adress']);
+				$employee->setPhone($db_user['phone']);
+				$employee->setLegajo($db_user['legajo']);
+				$employee->setIs_active($db_user['is_active']);
 
-				return $user;
+				return $employee;
 			}
 			else
 			{
@@ -237,13 +253,12 @@ class employeeEntity
 		{
 			if (isset($id))
 			{
-
 				$conn = connection::connect();
 				$fpdo = new FluentPDO($conn);
 
 				$sql = $fpdo->update(self::getTableName())
-										->set(array('is_active' => 0))
-										->where("id = $id");
+										->set(array('is_active' => false))
+										->where('id', $id);
 
 				$sql->execute();
 
