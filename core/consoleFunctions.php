@@ -8,9 +8,7 @@
           fwrite($file, "<?php\n");
           fwrite($file, "require_once('core/connection.php');\n");
           fwrite($file, "require_once('vendor/autoload.php');\n");
-          fwrite($file, "if (\$global['env'] == 'dev') ini_set('display_errors', 'On');\n\n");
-          fwrite($file, "//Las entidades deben extender la entidad base BaseEntity\n");
-          fwrite($file, "//para así heredar sus métodos y atributos.\n");
+          fwrite($file, "if (\$global['env'] == 'dev') ini_set('display_errors', 'On');\n\n");          
           fwrite($file, "class $nombre" . "Entity\n");
           fwrite($file, "{\n");
           fwrite($file, "//--------------------------------PROPIEDADES----------------------------------//\n");
