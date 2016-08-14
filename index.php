@@ -10,7 +10,7 @@
       ini_set('display_errors', 'On');
 
       echo "<h1> Pagina index de prueba </h1>";
-      
+
      ?>
 
   </body>
