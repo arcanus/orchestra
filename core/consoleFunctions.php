@@ -1,5 +1,6 @@
 <?php
 
+  //Crea el archivo de entidad
   function createEntity($nombre, $campos)
   {
       try
@@ -347,44 +348,65 @@
 
   }
 
+  //Crea la tabla en la base de datos en base a la entidad
   function createEntityTable()
   {
     $config = require './config/database.php';
     $conn = connection::connect();
     $nombre_campo = "";
 
-    echo "Crear Nueva Entidad:\n\n";
-    echo "Desde aqui vamos a proceder a crear una nueva entidad.\n";
-    echo "Tenga en cuenta que el nombre de la entidad tiene que ser el mismo que el de la tabla a la que corresponde en la base de datos.\n";
-    echo "Los campos 'id' y 'is_active' son agregados de forma automática, por tanto no los ingrese.\n\n";
-
-    echo "Nombre de la entidad: ";
-
-    $nombre = strtolower(trim(fgets(STDIN)));
+    echo "Crear Nueva Entidad:\n";
+    echo "********************\n\n";
+    echo "\tDesde aqui vamos a proceder a crear una nueva entidad.\n";
+    echo "\tTenga en cuenta que el nombre de la entidad tiene que ser el mismo que el de la tabla\n";
+    echo "\ta la que corresponde en la base de datos.\n";
+    echo "\tPor ejemplo: Si usted tiene una tabla llamada 'usuarios', el nombre de la entidad que tiene\n";
+    echo "\tque ingresar es: 'usaurios'.\n";
+    echo "\tLos campos 'id' y 'is_active' son agregados de forma automática, por tanto no los ingrese.\n\n";
 
     do
     {
-      echo "\nNombre de campo / propiedad [presione enter para finalizar]: ";
+      echo " -> Nombre de la entidad: ";
+
+      $nombre = strtolower(trim(fgets(STDIN)));
+    }while(!$nombre);
+
+    do
+    {
+
+      echo " -> Nombre de campo / propiedad [presione enter para finalizar]: ";
       $nombre_campo = strtolower(trim(fgets(STDIN)));
 
-      if ($nombre_campo)
+      do
       {
-        echo "\nTipos de dato validos: VARCHAR(len), INT, TINYINT, SMALLINT, MEDIUMINT, BIGINT, FLOAT, DOUBLE, DATE, TIME, DATETIME, YEAR, TEXT, TINYTEXT, MEDIUMTEXT, LONGTEXT, ENUM('A', 'B', 'C', etc...)\n\n";
-        echo "Tipo De Dato: ";
+        echo "\n\tTipos de dato validos: VARCHAR(len), INT, TINYINT, SMALLINT, MEDIUMINT, BIGINT,\n"; echo "\tFLOAT, DOUBLE, DATE, TIME, DATETIME, YEAR, TEXT, TINYTEXT, MEDIUMTEXT, LONGTEXT,\n"; echo "\tENUM('A', 'B', 'C', etc...)\n\n";
+        echo " -> Tipo De Dato: ";
 
-        $tipo_dato = trim(fgets(STDIN));
+        $aux = strtoupper(trim(fgets(STDIN)));
 
-        echo "\n¿Acepta Nulo? [si/no]: ";
-        $nulo = trim(fgets(STDIN));
+        $tipo_dato = validarTipoDeDato($aux);
 
-        $campos[] = array(
-          'campo'     =>  $nombre_campo,
-          'tipo_dato' =>  strtoupper($tipo_dato),
-          'nulo'      =>  $nulo == 'no' ? 'NOT NULL' : null
-        );
+        if($tipo_dato == null)
+        {
+          echo "\n\tTipo de dato incorrecto. Por favor, verifique que el tipo de dato sea válido.\n";
+        }
+
       }
+      while(!isset($tipo_dato));
 
-    } while($nombre_campo);
+    do
+    {
+      echo "\n -> ¿Acepta Nulo? [si/no]: ";
+      $nulo = trim(fgets(STDIN));
+    } while(!$nulo);
+
+    $campos[] = array(
+      'campo'     =>  $nombre_campo,
+      'tipo_dato' =>  strtoupper($tipo_dato),
+      'nulo'      =>  $nulo == 'no' ? 'NOT NULL' : null
+    );
+    
+  } while($nombre_campo);
 
     $sql = "CREATE TABLE $nombre (id int NOT NULL AUTO_INCREMENT, PRIMARY KEY (id)) DEFAULT CHARSET= " . $config['charset'];
 
@@ -402,9 +424,6 @@
     $sql = "ALTER TABLE $nombre ADD is_active BIT NOT NULL";
     $conn->exec($sql);
 
-    //$sql = "ALTER TABLE $nombre ADD PRIMARY KEY (id)";
-    //$conn->exec($sql);
-
     echo "\n\n*** TABLA CREADA CORRECTAMENTE ***\n\n";
 
     $info_entity = array();
@@ -415,6 +434,114 @@
     );
 
     return $info_entity;
+  }
+
+  //Valida que los tipos de datos ingresados por el usuario
+  //sean tipos de datos validos.
+  function validarTipoDeDato($aux)
+  {
+      if (isset($aux))
+      {
+        switch ($aux)
+        {
+          case 'VARCHAR':
+          {
+            return 'VARCHAR(200)';
+            break;
+          }
+          case 'INT':
+          {
+            return $aux;
+            break;
+          }
+          case 'TINYINT':
+          {
+            return $aux;
+            break;
+          }
+          case 'SMALLINT':
+          {
+            return $aux;
+            break;
+          }
+          case 'MEDIUMINT':
+          {
+            return $aux;
+            break;
+          }
+          case 'BIGINT':
+          {
+            return $aux;
+            break;
+          }
+          case 'FLOAT':
+          {
+            return $aux;
+            break;
+          }
+          case 'DOUBLE':
+          {
+            return $aux;
+            break;
+          }
+          case 'DATE':
+          {
+            return $aux;
+            break;
+          }
+          case 'TIME':
+          {
+            return $aux;
+            break;
+          }
+          case 'DATETIME':
+          {
+            return $aux;
+            break;
+          }
+          case 'YEAR':
+          {
+            return $aux;
+            break;
+          }
+          case 'TEXT':
+          {
+            return $aux;
+            break;
+          }
+          case 'TINYTEXT':
+          {
+            return $aux;
+            break;
+          }
+          case 'MEDIUMTEXT':
+          {
+            return $aux;
+            break;
+          }
+          case 'LONGTEXT':
+          {
+            return $aux;
+            break;
+          }
+          default:
+          {
+            if(substr($aux, 0, 4) == 'ENUM')
+            {
+              return $aux;
+            }
+            elseif(substr($aux, 0, 7) == 'VARCHAR')
+            {
+              return $aux;
+            }
+            else
+            {
+              return null;
+            }
+            break;
+          }
+        }
+      }
   }
 
 ?>
