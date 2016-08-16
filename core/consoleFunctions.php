@@ -5,7 +5,7 @@
   {
       try
       {
-          $file = fopen('entities/' . $nombre . "Entity.php", 'w') or die('No se puede crear la entidad.');
+          $file = fopen('entities/' . $nombre . "Entity.php", 'w') or die(" -> No se puede crear la entidad.\n\n");
           fwrite($file, "<?php\n");
           fwrite($file, "require_once('core/connection.php');\n");
           fwrite($file, "require_once('vendor/autoload.php');\n");
@@ -337,13 +337,10 @@
 
           fwrite($file, "}\n");
 
-
           fclose($file);
 
-
-
       } catch (Exception $e) {
-
+        echo "ERROR: " . $e->getMessage();
       }
 
   }
@@ -366,17 +363,18 @@
 
     do
     {
-      echo " -> Nombre de la entidad: ";
+      echo "\n -> Nombre de la entidad: ";
 
       $nombre = strtolower(trim(fgets(STDIN)));
     }while(!$nombre);
 
-    do
+    echo "\n -> Nombre de campo / propiedad [presione enter para finalizar]: ";
+    $nombre_campo = strtolower(trim(fgets(STDIN)));
+
+    if(!$nombre_campo) die("\n -> No se ha creado ningúna entidad.\n\n");
+
+    while($nombre_campo)
     {
-
-      echo " -> Nombre de campo / propiedad [presione enter para finalizar]: ";
-      $nombre_campo = strtolower(trim(fgets(STDIN)));
-
       do
       {
         echo "\n\tTipos de dato validos: VARCHAR(len), INT, TINYINT, SMALLINT, MEDIUMINT, BIGINT,\n"; echo "\tFLOAT, DOUBLE, DATE, TIME, DATETIME, YEAR, TEXT, TINYTEXT, MEDIUMTEXT, LONGTEXT,\n"; echo "\tENUM('A', 'B', 'C', etc...)\n\n";
@@ -405,7 +403,9 @@
       'tipo_dato' =>  strtoupper($tipo_dato),
       'nulo'      =>  $nulo == 'no' ? 'NOT NULL' : null
     );
-    
+
+    echo "\n -> Nombre de campo / propiedad [presione enter para finalizar]: ";
+    $nombre_campo = strtolower(trim(fgets(STDIN)));
   } while($nombre_campo);
 
     $sql = "CREATE TABLE $nombre (id int NOT NULL AUTO_INCREMENT, PRIMARY KEY (id)) DEFAULT CHARSET= " . $config['charset'];
@@ -424,7 +424,7 @@
     $sql = "ALTER TABLE $nombre ADD is_active BIT NOT NULL";
     $conn->exec($sql);
 
-    echo "\n\n*** TABLA CREADA CORRECTAMENTE ***\n\n";
+    echo "\n\n *** TABLA CREADA CORRECTAMENTE ***\n\n";
 
     $info_entity = array();
 

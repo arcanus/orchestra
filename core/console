@@ -26,10 +26,11 @@
 
           if($info_entity)
           {
-            echo "Ahora vamos a crear el archivo de entidad.\n\n";
-            echo "Presione una tecla para continuar...";
+            echo " -> Ahora vamos a crear el archivo de entidad.\n\n";
+            echo " -> Presione una tecla para continuar...";
             fgets(STDIN);
             createEntity($info_entity['nombre'], $info_entity['campos']);
+            echo "\n -> Entidad creada correctamente.\n\n";
           }
 
           break;
