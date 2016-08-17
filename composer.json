@@ -1,5 +1,18 @@
 {
+  "name": "agami/orchesta",
+  "type": "project",
+  "description": "PHP Framework",
+  "keywords": ["php","framework"],
+  "homepage": "https://github.com/arcanus/php_framework",
+  "license": "MIT",
+  "authors": [
+      {
+          "name": "Paulo Vazquez",
+          "role": "Developer"
+      }
+    ],
     "require": {
+        "php": ">=5.5.9",
         "lichtner/fluentpdo": "^1.1"
     }
 }
