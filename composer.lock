@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "951ec9fd09b044c8a853bc1526457c1f",
-    "content-hash": "96d7161eeafda9b4f58a79dc80139650",
+    "hash": "5e0b0b6f5e18ccfa3202f1395764fc55",
+    "content-hash": "183d35af9cee77b75ea8a7c4e13316b3",
     "packages": [
         {
             "name": "lichtner/fluentpdo",
@@ -54,6 +54,8 @@
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {
+        "php": ">=5.5.9"
+    },
     "platform-dev": []
 }
