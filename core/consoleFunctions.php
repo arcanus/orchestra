@@ -544,4 +544,118 @@
       }
   }
 
+  function createConfig()
+  {
+    try
+    {
+
+      echo "Bienvenido al asistente para la configuración de orchestra:\n";
+      echo "***********************************************************\n";
+
+      do
+      {
+
+        //MOTOR DE BASE DE DATOS:
+        echo "\n -> Motor [mysql]: ";
+
+        $db_driver = strtolower(trim(fgets(STDIN)));
+
+        if(!$db_driver)
+        {
+          $db_driver = "mysql";
+        }
+
+        //HOST DE BASE DE DATOS:
+        echo "\n -> Host [localhost]: ";
+
+        $db_host = strtolower(trim(fgets(STDIN)));
+
+        if(!$db_host)
+        {
+          $db_host = "localhost";
+        }
+
+        //USUARIO DE BASE DE DATOS:
+        echo "\n -> Usuario [root]: ";
+
+        $db_user = strtolower(trim(fgets(STDIN)));
+
+        if(!$db_user)
+        {
+          $db_user = "root";
+        }
+
+        //PASS DE BASE DE DATOS:
+        echo "\n -> Password: ";
+
+        $db_pass = strtolower(trim(fgets(STDIN)));
+
+        //NOMBRE DE BASE DE DATOS:
+        do
+        {
+          echo "\n -> Nombre de base de datos: ";
+
+          $db_name = strtolower(trim(fgets(STDIN)));
+        } while(!$db_name);
+
+        //CHARSET:
+        echo "\n -> Charset [utf8]: ";
+
+        $db_charset = strtolower(trim(fgets(STDIN)));
+
+        if(!$db_charset)
+        {
+          $db_charset = "utf8";
+        }
+
+        $db_charset = strtoupper($db_charset);
+
+        //*******************************
+        //******** VERIFICACION *********
+        //*******************************
+
+        echo "\n***********************************************************";
+        echo "\n***********************************************************\n\n";
+
+        echo "   DATOS:\n";
+        echo "   ======\n\n";
+        echo " * Driver -> " . $db_driver . "\n";
+        echo " * Host -> " . $db_host . "\n";
+        echo " * User -> " . $db_user . "\n";
+        echo " * Pass -> " . $db_pass . "\n";
+        echo " * Name -> " . $db_name . "\n";
+        echo " * Charset -> " . $db_charset . "\n\n";
+
+        echo " -> ¿Son correctos estos datos? si/no: ";
+        $confirm = strtolower(trim(fgets(STDIN)));
+
+      } while($confirm != 'si');
+
+      echo "\n * Creando el fichero de configuración...\n\n";
+
+      //CREACION DEL FICHERO CONFIG:
+      $file = fopen('config/database.php', 'w')
+              or die(" -> No se puede crear la entidad.\n\n");
+
+      fwrite($file, "<?php\n");
+      fwrite($file, "\treturn array(\n");
+      fwrite($file, "\t\t\"driver\" => \"$db_driver\",\n");
+      fwrite($file, "\t\t\"host\" => \"$db_host\",\n");
+      fwrite($file, "\t\t\"user\" => \"$db_user\",\n");
+      fwrite($file, "\t\t\"pass\" => \"$db_pass\",\n");
+      fwrite($file, "\t\t\"database\" => \"$db_name\",\n");
+      fwrite($file, "\t\t\"charset\" => \"$db_charset\"\n");
+      fwrite($file, "\t);\n");
+      fwrite($file, "?>\n");
+
+      fclose($file);
+
+      echo " * Fichero de configuración creado.\n\n";
+
+    } catch (Exception $e) {
+      die("ERROR: " . $e->getMessage());
+    }
+
+  }
+
 ?>
