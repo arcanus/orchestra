@@ -392,21 +392,22 @@
       }
       while(!isset($tipo_dato));
 
-    do
-    {
-      echo "\n -> ¿Acepta Nulo? [si/no]: ";
-      $nulo = trim(fgets(STDIN));
-    } while(!$nulo);
+      do
+      {
+        echo "\n -> ¿Acepta Nulo? [si/no]: ";
+        $nulo = trim(fgets(STDIN));
+      } while(!$nulo);
 
-    $campos[] = array(
-      'campo'     =>  $nombre_campo,
-      'tipo_dato' =>  strtoupper($tipo_dato),
-      'nulo'      =>  $nulo == 'no' ? 'NOT NULL' : null
-    );
+      $campos[] = array(
+        'campo'     =>  $nombre_campo,
+        'tipo_dato' =>  strtoupper($tipo_dato),
+        'nulo'      =>  $nulo == 'no' ? 'NOT NULL' : null
+      );
 
-    echo "\n -> Nombre de campo / propiedad [presione enter para finalizar]: ";
-    $nombre_campo = strtolower(trim(fgets(STDIN)));
-  } while($nombre_campo);
+      echo "\n -> Nombre de campo / propiedad [presione enter para finalizar]: ";
+      $nombre_campo = strtolower(trim(fgets(STDIN)));
+
+    } while($nombre_campo);
 
     $sql = "CREATE TABLE $nombre (id int NOT NULL AUTO_INCREMENT, PRIMARY KEY (id)) DEFAULT CHARSET= " . $config['charset'];
 
@@ -650,7 +651,9 @@
 
       fclose($file);
 
-      echo " * Fichero de configuración creado.\n\n";
+      echo " * Fichero de configuración creado.\n";
+
+      checkConfig();
 
     } catch (Exception $e) {
       die("ERROR: " . $e->getMessage());
