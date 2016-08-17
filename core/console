@@ -33,7 +33,11 @@
             echo "\n -> Entidad creada correctamente.\n\n";
           }
 
-          break;
+        break;
+        
+        case 'create:config':
+
+        break;
       }
   }
 
