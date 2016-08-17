@@ -42,6 +42,10 @@
         case 'create:database':
           createDatabase();
         break;
+
+        case 'check:config':
+          checkConfig();
+        break;
       }
   }
 

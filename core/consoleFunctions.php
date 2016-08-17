@@ -658,4 +658,71 @@
 
   }
 
+  function createDatabase()
+  {
+    try
+    {
+
+      $db_config = require 'config/database.php';
+
+      if ($db_config['driver'] == "mysql")
+      {
+        $conn = new PDO("mysql:host=" . $db_config['host'] . ";", $db_config['user'], $db_config['pass']);
+
+        //Activamos el modo error->exception de PDO:
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $conn->query("SET NAMES " . $db_config['charset']);
+
+        //CONSULTAMOS SI EXISTE LA TABLA
+        $stmt = $conn->query("SHOW DATABASES LIKE '" . $db_config['database'] . "'");
+        $databases = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        //SI NO EXISTE LA CREAMOS
+        if($databases)
+        {
+          echo " * La base de datos ya existe.\n";
+        }
+        else
+        {
+          $conn->exec("CREATE DATABASE " . $db_config['database'])
+            or die("Error creando la base de datos.\n");
+            echo "\nBase de datos creada correctamente.\n\n";
+        }
+
+        $conn = null;
+        $stmt = null;
+
+      }
+    } catch (Exception $e) {
+      die("ERROR: " . $e->getMessage());
+    }
+
+  }
+
+  function checkConfig()
+  {
+    try
+    {
+      require_once 'core/connection.php';
+
+      if(connection::connect(0))
+      {
+        echo "\n * La configuración es correcta.\n\n";
+      }
+      else
+      {
+        echo "\n * La configuración es incorrecta.\n";
+        echo " * Por favor, ejecute php core/console create:config \n\n";
+      }
+
+      $conn = null;
+
+    }
+    catch (Exception $e)
+    {
+
+    }
+
+  }
+
 ?>

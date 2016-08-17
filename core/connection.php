@@ -17,7 +17,7 @@
         self::$db_charset = $db_config["charset"];
       }
 
-      public static function connect()
+      public static function connect($verbose = 1)
       {
         try
         {
@@ -34,7 +34,7 @@
             return $conn;
           }
         } catch (PDOException $e) {
-          echo "Connection failed. " . $e->getMessage();
+          if($verbose == 1) echo "Connection failed. " . $e->getMessage() . "\n";
         }
       }
   }
