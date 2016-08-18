@@ -13,12 +13,7 @@
     ],
     "autoload": {
         "psr-4": {
-          "core\\": "core/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-          "core\\": "core/"
+          "core\\console\\consoleFunctions": "core/"
         }
     },
     "require": {
