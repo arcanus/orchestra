@@ -654,6 +654,16 @@
 
       echo " * Fichero de configuración creado.\n";
 
+      //SI EL DIRECTORIO /entities/ NO EXISTE, LO CREA.
+      if(!file_exists('entities'))
+      {
+        echo "\n * Creando directorios...\n\n";
+
+        mkdir('entities', 0764);
+
+        echo " * Directorio creado correctamente.\n";
+      }
+
       checkConfig();
 
     } catch (Exception $e) {
