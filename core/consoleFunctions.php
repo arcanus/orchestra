@@ -763,5 +763,11 @@
 
       echo "\n";
     }
+
+    //Limpia la consola
+    public static function ClearConsole()
+    {
+      echo shell_exec('clear');
+    }
   }
 ?>

@@ -13,6 +13,7 @@
     ],
     "autoload": {
         "psr-4": {
+          "core\\": "core/",
           "core\\console\\": "core/"
         }
     },
@@ -22,6 +23,7 @@
     },
     "scripts": {
       "post-create-project-cmd": [
+        "core\\console\\consoleFunctions::ClearConsole",
         "core\\console\\consoleFunctions::createConfig"
       ]
     }
