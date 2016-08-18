@@ -4,7 +4,7 @@
 		"host" => "localhost",
 		"user" => "root",
 		"pass" => "0n1yd3bi4n",
-		"database" => "ejemplo_login",
+		"database" => "ejemplo_login2",
 		"charset" => "UTF8"
 	);
 ?>

@@ -9,12 +9,7 @@
   switch ($argc)
   {
     case '1':
-      echo "Bienvenido a la consola interactiva:\n\n";
-      echo "USO:\n";
-      echo "****\n";
-      echo "Crear Nueva Entidad:  php core/console create:entity\n";
-
-      echo "\n\n";
+      mostrarMenu();      
       break;
 
     case '2':
@@ -45,6 +40,10 @@
 
         case 'check:config':
           checkConfig();
+        break;
+
+        default:
+          mostrarMenu();
         break;
       }
   }

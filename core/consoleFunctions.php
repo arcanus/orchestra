@@ -545,6 +545,7 @@
       }
   }
 
+  //Asistente para crear el archivo /config/database.php
   function createConfig()
   {
     try
@@ -661,6 +662,8 @@
 
   }
 
+  //Crea la base de datos que esté seteada en la config
+  //(/config/database.php)
   function createDatabase()
   {
     try
@@ -689,7 +692,7 @@
         {
           $conn->exec("CREATE DATABASE " . $db_config['database'])
             or die("Error creando la base de datos.\n");
-            echo "\nBase de datos creada correctamente.\n\n";
+            echo "\n * Base de datos creada correctamente.\n\n";
         }
 
         $conn = null;
@@ -702,6 +705,8 @@
 
   }
 
+  //Realiza un chequeo para ver si la configuración
+  //permite conectarse a la base de datos.
   function checkConfig()
   {
     try
@@ -728,4 +733,18 @@
 
   }
 
+  //Imprime el menú de la consola en pantalla.
+  function mostrarMenu()
+  {
+    echo "\n * Bienvenido a la consola interactiva:\n";
+    echo "   ************************************\n\n";
+    echo " * USO:\n";
+    echo "   ****\n\n";
+    echo " -> Crear nueva entidad:  \t\tphp core/console create:entity\n";
+    echo " -> Crear nueva base de datos:  \tphp core/console create:database\n";
+    echo " -> Crear nueva configuración:  \tphp core/console create:config\n";
+    echo " -> Chequear configuración existente:  \tphp core/console check:config\n";
+
+    echo "\n";
+  }
 ?>
