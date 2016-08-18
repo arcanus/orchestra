@@ -1,5 +1,5 @@
 <?php
-$global = array(
-  'env' => 'dev'
-);
+  $global = array(
+    'env' => 'dev'
+  );
 ?>

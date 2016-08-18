@@ -1,3 +1,7 @@
+<?php  
+  include 'core/autoload.php';
+?>
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -6,11 +10,24 @@
   </head>
   <body>
 
+    <h1>Pagina Index De Pruebas</h1>
+
+    <h2>Empleados:</h2>
+
     <?php
-      ini_set('display_errors', 'On');
+      //$emp = new \entities\employeesEntity("pepe", 11252326, "la rioja 296", "2994563632");
+      //$emp->insert() or die("No se puede insertar empleado");
 
-      echo "<h1> Pagina index de prueba </h1>";
+      $empleados = \entities\employeesEntity::getAll();
 
+      echo "<ul>";
+
+      foreach($empleados as $e)
+      {
+        echo "\t<li>" . $e['nombre'] . "</li>";
+      }
+
+      echo "</ul>";
      ?>
 
   </body>
