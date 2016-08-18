@@ -14,5 +14,10 @@
     "require": {
         "php": ">=5.5.9",
         "lichtner/fluentpdo": "^1.1"
+    },
+    "scripts": {
+      "post-create-project-cmd": [
+        "php core/console create:config"
+      ]
     }
 }
