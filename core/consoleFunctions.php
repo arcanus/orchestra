@@ -6,11 +6,11 @@
       try
       {
           $file = fopen('entities/' . $nombre . "Entity.php", 'w') or die(" -> No se puede crear la entidad.\n\n");
+
           fwrite($file, "<?php\n");
-          fwrite($file, "\trequire_once('core/connection.php');\n");
-          fwrite($file, "\trequire_once('vendor/autoload.php');\n");
-          fwrite($file, "\tif (\$global['env'] == 'dev') ini_set('display_errors', 'On');\n\n");
-          fwrite($file, "class $nombre" . "Entity implements iEntity\n");
+          fwrite($file, "\tnamespace entities;\n\n");
+
+          fwrite($file, "class $nombre" . "Entity implements \\core\\iEntity\n");
           fwrite($file, "{\n");
           fwrite($file, "//--------------------------------PROPIEDADES----------------------------------//\n");
 
@@ -140,8 +140,8 @@
           fwrite($file, "\t\t\tif (\$this->validate())\n");
           fwrite($file, "\t\t\t{\n");
 
-          fwrite($file, "\t\t\t\t\$conn = connection::connect();\n");
-          fwrite($file, "\t\t\t\t\$fpdo = new FluentPDO(\$conn); \n\n");
+          fwrite($file, "\t\t\t\t\$conn = \\core\\connection::connect();\n");
+          fwrite($file, "\t\t\t\t\$fpdo = new \\FluentPDO(\$conn); \n\n");
 
           fwrite($file, "\t\t\t\t\$values = array(\n");
 
@@ -186,8 +186,8 @@
           fwrite($file, "\t\t\tif (isset(\$this->id))\n");
           fwrite($file, "\t\t\t{\n");
 
-          fwrite($file, "\t\t\t\t\$conn = connection::connect();\n");
-          fwrite($file, "\t\t\t\t\$fpdo = new FluentPDO(\$conn); \n\n");
+          fwrite($file, "\t\t\t\t\$conn = \\core\\connection::connect();\n");
+          fwrite($file, "\t\t\t\t\$fpdo = new \\FluentPDO(\$conn); \n\n");
 
           fwrite($file, "\t\t\t\t\$sql = \$fpdo->update(self::getTableName())\n");
           fwrite($file, "\t\t\t\t\t\t\t\t\t\t->set(array('is_active' => false))\n");
@@ -231,8 +231,8 @@
           fwrite($file, "\t\ttry\n");
           fwrite($file, "\t\t{\n");
 
-          fwrite($file, "\t\t\t\$conn = connection::connect();\n");
-          fwrite($file, "\t\t\t\$fpdo = new FluentPDO(\$conn); \n\n");
+          fwrite($file, "\t\t\t\$conn = \\core\\connection::connect();\n");
+          fwrite($file, "\t\t\t\$fpdo = new \\FluentPDO(\$conn); \n\n");
 
           fwrite($file, "\t\t\t\$resul = \$fpdo->from(self::getTableName())->where('is_active', 1);\n");
 
@@ -262,8 +262,8 @@
           fwrite($file, "\t\ttry\n");
           fwrite($file, "\t\t{\n");
 
-          fwrite($file, "\t\t\t\$conn = connection::connect();\n");
-          fwrite($file, "\t\t\t\$fpdo = new FluentPDO(\$conn); \n\n");
+          fwrite($file, "\t\t\t\$conn = \\core\\connection::connect();\n");
+          fwrite($file, "\t\t\t\$fpdo = new \\FluentPDO(\$conn); \n\n");
 
           fwrite($file, "\t\t\t\$resul = \$fpdo->from(self::getTableName())->where(\"id = \$id AND is_active = true\");\n\n");
 
@@ -274,7 +274,7 @@
           fwrite($file, "\t\t\t{\n");
 
           fwrite($file, "\t\t\t\t\$db_user = \$resul->fetch(); \n");
-          fwrite($file, "\t\t\t\t\$" . $nombre .  " = new " . $nombre . "Entity(); \n\n");
+          fwrite($file, "\t\t\t\t\$" . $nombre .  " = new \\entities\\" . $nombre . "Entity(); \n\n");
           fwrite($file, "\t\t\t\t\$" . $nombre . "->setId(\$db_user['id']); \n");
 
           foreach($campos as $campo)
@@ -309,8 +309,8 @@
           fwrite($file, "\t\t\tif (isset(\$id))\n");
           fwrite($file, "\t\t\t{\n");
 
-          fwrite($file, "\t\t\t\t\$conn = connection::connect();\n");
-          fwrite($file, "\t\t\t\t\$fpdo = new FluentPDO(\$conn); \n\n");
+          fwrite($file, "\t\t\t\t\$conn = \\core\\connection::connect();\n");
+          fwrite($file, "\t\t\t\t\$fpdo = new \\FluentPDO(\$conn); \n\n");
 
           fwrite($file, "\t\t\t\t\$sql = \$fpdo->update(self::getTableName())\n");
           fwrite($file, "\t\t\t\t\t\t\t\t\t\t->set(array('is_active' => false))\n");
@@ -349,7 +349,7 @@
   function createEntityTable()
   {
     $config = require './config/database.php';
-    $conn = connection::connect();
+    $conn = \core\connection::connect();
     $nombre_campo = "";
 
     echo "Crear Nueva Entidad:\n";

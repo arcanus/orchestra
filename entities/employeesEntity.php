@@ -1,33 +1,26 @@
 <?php
 	namespace entities;
 
-
-class employeesEntity implements iEntity
+class employeesEntity implements \core\iEntity
 {
 //--------------------------------PROPIEDADES----------------------------------//
 	private $id;
 	private $nombre;
-	private $dni;
-	private $direccion;
-	private $telefono;
+	private $email;
 	private $is_active;
 //-------------------------------------------------------------------------------
 
 //-------------------------------CONSTRUCTORES-----------------------------------
 	public function __construct(
 		$nombre = null,
-		$dni = null,
-		$direccion = null,
-		$telefono = null,
+		$email = null,
 		$is_active = true
 		)
 	{
 
 		$this->setId(null);
 		$this->setNombre($nombre);
-		$this->setDni($dni);
-		$this->setDireccion($direccion);
-		$this->setTelefono($telefono);
+		$this->setEmail($email);
 		$this->setIs_active($is_active);
 	}
 	//-------------------------------------------------------------------------------
@@ -53,34 +46,14 @@ class employeesEntity implements iEntity
 		$this->nombre = $value;
 	}
 
-	public function getDni()
+	public function getEmail()
 	{
-		return $this->dni;
+		return $this->email;
 	}
 
-	public function setDni($value)
+	public function setEmail($value)
 	{
-		$this->dni = $value;
-	}
-
-	public function getDireccion()
-	{
-		return $this->direccion;
-	}
-
-	public function setDireccion($value)
-	{
-		$this->direccion = $value;
-	}
-
-	public function getTelefono()
-	{
-		return $this->telefono;
-	}
-
-	public function setTelefono($value)
-	{
-		$this->telefono = $value;
+		$this->email = $value;
 	}
 
 	public function getIs_active()
@@ -100,7 +73,6 @@ class employeesEntity implements iEntity
 	{
 		if (
 			isset($this->nombre)
-			&& isset($this->dni)
 			&& isset($this->is_active)
 			)
 			{
@@ -119,18 +91,15 @@ class employeesEntity implements iEntity
 			if ($this->validate())
 			{
 				$conn = \core\connection::connect();
-
-				$fpdo = new \FluentPDO($conn);
+				$fpdo = new \FluentPDO($conn); 
 
 				$values = array(
 					'nombre' => $this->nombre,
-					'dni' => $this->dni,
-					'direccion' => $this->direccion,
-					'telefono' => $this->telefono,
+					'email' => $this->email,
 					'is_active' => $this->is_active
 				);
 
-				$query = $fpdo->insertInto(self::getTableName())->values($values);
+				$query = $fpdo->insertInto(self::getTableName())->values($values); 
 				$resul = $query->execute();
 
 				$query = null;
@@ -146,7 +115,7 @@ class employeesEntity implements iEntity
 				return null;
 			}
 		} catch (Exception $e) {
-			die("ERROR: " . $e->getMessage());
+			die("ERROR: " . $e->getMessage()); 
 		}
 	}
 
@@ -157,7 +126,7 @@ class employeesEntity implements iEntity
 			if (isset($this->id))
 			{
 				$conn = \core\connection::connect();
-				$fpdo = new \FluentPDO($conn);
+				$fpdo = new \FluentPDO($conn); 
 
 				$sql = $fpdo->update(self::getTableName())
 										->set(array('is_active' => false))
@@ -176,7 +145,7 @@ class employeesEntity implements iEntity
 				return null;
 			}
 		} catch (Exception $e) {
-			die("ERROR: " . $e->getMessage());
+			die("ERROR: " . $e->getMessage()); 
 		}
 	}
 
@@ -191,7 +160,7 @@ class employeesEntity implements iEntity
 		try
 		{
 			$conn = \core\connection::connect();
-			$fpdo = new \FluentPDO($conn);
+			$fpdo = new \FluentPDO($conn); 
 
 			$resul = $fpdo->from(self::getTableName())->where('is_active', 1);
 			$fpdo = null;
@@ -206,7 +175,7 @@ class employeesEntity implements iEntity
 				return null;
 			}
 		} catch (Exception $e) {
-			die("ERROR: " . $e->getMessage());
+			die("ERROR: " . $e->getMessage()); 
 		}
 	}
 
@@ -215,7 +184,7 @@ class employeesEntity implements iEntity
 		try
 		{
 			$conn = \core\connection::connect();
-			$fpdo = new \FluentPDO($conn);
+			$fpdo = new \FluentPDO($conn); 
 
 			$resul = $fpdo->from(self::getTableName())->where("id = $id AND is_active = true");
 
@@ -224,15 +193,13 @@ class employeesEntity implements iEntity
 
 			if($resul)
 			{
-				$db_user = $resul->fetch();
-				$employees = new entities\employeesEntity();
+				$db_user = $resul->fetch(); 
+				$employees = new \entities\employeesEntity(); 
 
-				$employees->setId($db_user['id']);
-				$employees->setNombre($db_user['nombre']);
-				$employees->setDni($db_user['dni']);
-				$employees->setDireccion($db_user['direccion']);
-				$employees->setTelefono($db_user['telefono']);
-				$employees->setIs_active($db_user['is_active']);
+				$employees->setId($db_user['id']); 
+				$employees->setNombre($db_user['nombre']); 
+				$employees->setEmail($db_user['email']); 
+				$employees->setIs_active($db_user['is_active']); 
 
 				return $employees;
 			}
@@ -241,7 +208,7 @@ class employeesEntity implements iEntity
 				return null;
 			}
 		} catch (Exception $e) {
-			die("ERROR: " . $e->getMessage());
+			die("ERROR: " . $e->getMessage()); 
 		}
 	}
 
@@ -252,7 +219,7 @@ class employeesEntity implements iEntity
 			if (isset($id))
 			{
 				$conn = \core\connection::connect();
-				$fpdo = new \FluentPDO($conn);
+				$fpdo = new \FluentPDO($conn); 
 
 				$sql = $fpdo->update(self::getTableName())
 										->set(array('is_active' => false))
@@ -271,7 +238,7 @@ class employeesEntity implements iEntity
 				return null;
 			}
 		} catch (Exception $e) {
-			die("ERROR: " . $e->getMessage());
+			die("ERROR: " . $e->getMessage()); 
 		}
 	}
 

@@ -1,5 +1,5 @@
 <?php
-  namespace entities;  
+  namespace core;  
 
   interface iEntity
   {

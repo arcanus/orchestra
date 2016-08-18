@@ -1,4 +1,4 @@
-<?php  
+<?php
   include 'core/autoload.php';
 ?>
 
@@ -15,8 +15,8 @@
     <h2>Empleados:</h2>
 
     <?php
-      //$emp = new \entities\employeesEntity("pepe", 11252326, "la rioja 296", "2994563632");
-      //$emp->insert() or die("No se puede insertar empleado");
+      $emp = new \entities\employeesEntity("pepe", 11252326, "la rioja 296", "2994563632");
+      $emp->insert() or die("No se puede insertar empleado");
 
       $empleados = \entities\employeesEntity::getAll();
 
