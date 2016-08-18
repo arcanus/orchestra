@@ -17,7 +17,7 @@
     },
     "scripts": {
       "post-create-project-cmd": [
-        "php -a core/console create:config"
+        "\\core\\console\\consoleFunctions::createConfig"
       ]
     }
 }

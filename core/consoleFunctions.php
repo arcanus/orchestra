@@ -668,6 +668,8 @@
           echo " * Directorio creado correctamente.\n";
         }
 
+        \core\console\consoleFunctions::createDatabase();
+
         \core\console\consoleFunctions::checkConfig();
 
       } catch (Exception $e) {
