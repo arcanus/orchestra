@@ -23,7 +23,7 @@
     },
     "scripts": {
       "post-create-project-cmd": [
-        "core\\console\\consoleFunctions::ClearConsole",
+        "core\\console\\consoleFunctions::clearConsole",
         "core\\console\\consoleFunctions::createConfig"
       ]
     }

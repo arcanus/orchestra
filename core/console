@@ -4,12 +4,6 @@
   include 'core/autoload.php';
   include 'core/consoleFunctions.php';
 
-  /*
-  require_once 'core/connection.php';
-  require_once 'core/consoleFunctions.php';
-  require_once 'vendor/autoload.php';
-  */
-
   echo shell_exec('clear');
 
   switch ($argc)

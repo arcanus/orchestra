@@ -663,7 +663,13 @@
         {
           echo "\n * Creando directorios...\n\n";
 
-          mkdir('entities', 0764);
+          $old_mask = umask(0);
+
+          mkdir('entities', 0755);
+
+          umask($old_mask);
+
+          $old_mask = null;
 
           echo " * Directorio creado correctamente.\n";
         }
@@ -765,7 +771,7 @@
     }
 
     //Limpia la consola
-    public static function ClearConsole()
+    public static function clearConsole()
     {
       echo shell_exec('clear');
     }
