@@ -1,14 +1,18 @@
 <?php
 
-  include 'config/global.php';
-  include 'vendor/autoload.php';
+  require_once 'vendor/autoload.php';
 
   spl_autoload_register(function($class)
-  {    
-    if(!require_once str_replace('\\', '/', $class) . ".php")
-    {
-      die("No se puede cargar $class");
+  {
+    try
+    {      
+      require_once str_replace('\\', '/', $class) . ".php";
     }
+    catch(Exception $e)
+    {
+      die("No se puede cargar $class\n" . $e->getMessage);
+    }
+
   });
 
 ?>

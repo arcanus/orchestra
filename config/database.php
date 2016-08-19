@@ -3,8 +3,8 @@
 		"driver" => "mysql",
 		"host" => "localhost",
 		"user" => "root",
-		"pass" => "0n1yd3bi4n",
-		"database" => "pepito",
+		"pass" => "",
+		"database" => "",
 		"charset" => "UTF8"
 	);
 ?>
