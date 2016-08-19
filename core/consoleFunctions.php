@@ -708,7 +708,7 @@
           //SI NO EXISTE LA CREAMOS
           if($databases)
           {
-            echo " * La base de datos ya existe.\n";
+            echo "\n * La base de datos ya existe.\n";
           }
           else
           {
