@@ -1,6 +1,8 @@
 <?php
-  namespace core;  
-
+  namespace core;
+  /*
+  Toda entidad que se cree, ya sea con la consola interactiva o manualmente debe implementar esta interface para así mantener un funcionamiento homogeneo de las clases y del framework en si.
+  */
   interface iEntity
   {
 
