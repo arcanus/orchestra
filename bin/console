@@ -1,8 +1,8 @@
 #!/usr/bin/php
 <?php
 
-  include 'core/autoload.php';
-  include 'core/consoleFunctions.php';
+  include (__DIR__ . "/../core/autoload.php");
+  //include ("../core/consoleFunctions.php");
 
   echo shell_exec('clear');
 

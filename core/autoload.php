@@ -1,12 +1,12 @@
 <?php
 
-  require_once 'vendor/autoload.php';
+  require_once(__DIR__ . "/../vendor/autoload.php");
 
   spl_autoload_register(function($class)
   {
     try
-    {      
-      require_once str_replace('\\', '/', $class) . ".php";
+    {
+      require_once(__DIR__ . "/../" . str_replace('\\', '/', $class) . ".php");
     }
     catch(Exception $e)
     {

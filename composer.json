@@ -12,9 +12,8 @@
       }
     ],
     "autoload": {
-        "psr-4": {
-          "core\\": "core/",
-          "core\\console\\": "core/"
+        "psr-4": {          
+          "core\\console\\": "core/console/"
         }
     },
     "require": {

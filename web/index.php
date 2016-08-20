@@ -1,7 +1,8 @@
 <?php
-  include 'core/autoload.php';
+  ini_set('display_errors', 1);
+  include("../core/autoload.php");
 
-  if(config\globalConfig::getEnv() == 'dev')
+  if(\config\globalConfig::getEnv() == 'dev')
   {
     error_reporting(E_ALL);
     ini_set('display_errors', 1);
@@ -14,6 +15,8 @@
     <title>Vista por defecto</title>
   </head>
   <body>
+
+  <h1>Probandooooo!</h1>
 
   
 
