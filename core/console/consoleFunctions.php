@@ -733,8 +733,6 @@
     {
       try
       {
-        //require_once '/core/connection.php';
-
         if(\core\connection::connect(0))
         {
           echo "\n * La configuración es correcta.\n\n";
