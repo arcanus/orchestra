@@ -355,6 +355,7 @@
       $config = require './config/database.php';
       $conn = \core\connection::connect();
       $nombre_campo = "";
+      $campos = array();
 
       echo "Crear Nueva Entidad:\n";
       echo "********************\n\n";
@@ -393,25 +394,51 @@
             echo "\n\tTipo de dato incorrecto. Por favor, verifique que el tipo de dato sea válido.\n";
           }
 
-        }
-        while(!isset($tipo_dato));
+        } while(!isset($tipo_dato));
 
         do
         {
           echo "\n -> ¿Acepta Nulo? [si/no]: ";
           $nulo = trim(fgets(STDIN));
-        } while(!$nulo);
+        } while($nulo != 'si' && $nulo != 'no');
 
-        $campos[] = array(
-          'campo'     =>  $nombre_campo,
-          'tipo_dato' =>  strtoupper($tipo_dato),
-          'nulo'      =>  $nulo == 'no' ? 'NOT NULL' : null
-        );
+        do
+        {
+          echo "\n -> ¿El campo es único? [si/no]: ";
+          $unico = trim(fgets(STDIN));
+        } while($unico != 'si' && $unico != 'no');
+        
+
+        echo "\n * RESUMEN:";
+        echo "\n **********\n";
+        echo "\n -> Nombre De Campo: " . $nombre_campo;
+        echo "\n -> Tipo De Dato: " . $tipo_dato;
+        echo "\n -> Acepta Nulo: " . $nulo;
+        echo "\n -> Campo Único: " . $unico;
+        echo "\n";
+
+        do
+        {
+          echo "\n -> ¿Es Correcto? si/no: ";
+          $campo_correcto = strtolower(trim(fgets(STDIN)));
+        } while($campo_correcto != 'si' && $campo_correcto != 'no');
+
+        if ($campo_correcto == 'si')
+        {
+          $campos[] = array(
+            'campo'     =>  $nombre_campo,
+            'tipo_dato' =>  strtoupper($tipo_dato),
+            'nulo'      =>  $nulo == 'no' ? 'NOT NULL' : null,
+            'unico'     =>  $unico == 'si' ? 'UNIQUE' : null
+          );
+        }
 
         echo "\n -> Nombre de campo / propiedad [presione enter para finalizar]: ";
         $nombre_campo = strtolower(trim(fgets(STDIN)));
 
       } while($nombre_campo);
+
+      if(count($campos) < 1) die("\n -> No se creó la entidad.\n\n");
 
       $sql = "CREATE TABLE $nombre (id int NOT NULL AUTO_INCREMENT, PRIMARY KEY (id)) DEFAULT CHARSET= " . $config['charset'];
 
@@ -422,7 +449,8 @@
         $sql = "ALTER TABLE $nombre ADD "
                 . $campo['campo'] . " "
                 . $campo['tipo_dato'] . " "
-                . $campo['nulo'];
+                . $campo['nulo'] . " "
+                . $campo['unico'];
         $conn->exec($sql);
       }
 
