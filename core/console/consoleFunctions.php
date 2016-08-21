@@ -373,6 +373,9 @@
         $nombre = strtolower(trim(fgets(STDIN)));
       }while(!$nombre);
 
+      //PRUEBAAAAAA
+      self::verificarEntidad($nombre);
+
       echo "\n -> Nombre de campo / propiedad [presione enter para finalizar]: ";
       $nombre_campo = strtolower(trim(fgets(STDIN)));
 
@@ -407,7 +410,7 @@
           echo "\n -> ¿El campo es único? [si/no]: ";
           $unico = trim(fgets(STDIN));
         } while($unico != 'si' && $unico != 'no');
-        
+
 
         echo "\n * RESUMEN:";
         echo "\n **********\n";
@@ -718,38 +721,46 @@
     {
       try
       {
+        //SEGUIR ACA
+        $db_config = include(__DIR__ . '/../../config/database.php');
 
-        $db_config = require 'config/database.php';
+        $conn = \core\connection::connect();
 
-        if ($db_config['driver'] == "mysql")
+        //CONSULTAMOS SI EXISTE LA BASE DE DATOS
+        $stmt = $conn->query("SHOW DATABASES LIKE '" . $db_config['database'] . "'");
+        $databases = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        //SI NO EXISTE LA CREAMOS
+        if($databases)
         {
-          $conn = new \PDO("mysql:host=" . $db_config['host'] . ";", $db_config['user'], $db_config['pass']);
-
-          //Activamos el modo error->exception de PDO:
-          $conn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-          $conn->query("SET NAMES " . $db_config['charset']);
-
-          //CONSULTAMOS SI EXISTE LA TABLA
-          $stmt = $conn->query("SHOW DATABASES LIKE '" . $db_config['database'] . "'");
-          $databases = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-
-          //SI NO EXISTE LA CREAMOS
-          if($databases)
+          do
           {
             echo "\n * La base de datos ya existe.\n";
+            echo " * ¿Desea eliminarla? si/no: ";
+            $eliminar_db = strtolower(trim(fgets(STDIN)));
+          } while($eliminar_db != 'si' && $eliminar_db != 'no');
+
+          if($eliminar_db == 'si')
+          {
+            $conn->exec("DROP DATABASE " . $db_config['database'])
+              or die("\n -> Error eliminando la base de datos\n");
+            echo "\n * Base de datos eliminada.\n";
           }
           else
           {
-            $conn->exec("CREATE DATABASE " . $db_config['database'])
-              or die("Error creando la base de datos.\n");
-              echo "\n * Base de datos creada correctamente.\n\n";
+            return true;
           }
-
-          $conn = null;
-          $stmt = null;
-
         }
-      } catch (Exception $e) {
+
+        $conn->exec("CREATE DATABASE " . $db_config['database'])
+          or die("Error creando la base de datos.\n");
+        echo "\n * Base de datos creada correctamente.\n\n";
+
+        $conn = null;
+        $stmt = null;
+      }
+      catch (Exception $e)
+      {
         die("ERROR: " . $e->getMessage());
       }
 
@@ -776,7 +787,7 @@
       }
       catch (Exception $e)
       {
-
+        die("ERROR: " . $e->getMessage());
       }
 
     }
@@ -800,6 +811,25 @@
     public static function clearConsole()
     {
       echo shell_exec('clear');
+    }
+
+    //Verificar si existe la tabla y el archivo de entidad.
+    private static function verificarEntidad($nombre)
+    {
+      try
+      {
+
+      }
+      catch (Exception $e)
+      {
+        $db_config = require 'config/database.php';
+
+        if ($db_config['driver'] == "mysql")
+        {
+          $conn = new \PDO("mysql:host=" . $db_config['host'] . ";", $db_config['user'], $db_config['pass']);
+        }
+
+      }
     }
   }
 ?>
