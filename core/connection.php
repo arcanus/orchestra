@@ -9,8 +9,8 @@
 
       private static function config()
       {
-        $db_config = require 'config/database.php';
-        
+        $db_config = include(__DIR__ . '/../config/database.php');
+
         self::$driver = $db_config["driver"];
         self::$server_host = $db_config["host"];
         self::$db_name = $db_config["database"];
@@ -29,6 +29,27 @@
           if (self::$driver == "mysql")
           {
             $conn = new \PDO("mysql:host=" . self::$server_host . ";dbname=" . self::$db_name . ";charset=" . self::$db_charset, self::$db_user, self::$db_pass);
+
+            //Activamos el modo error->exception de PDO:
+            $conn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+            $conn->query("SET NAMES " . self::$db_charset);
+            return $conn;
+          }
+        } catch (\PDOException $e) {
+          if($verbose == 1) echo "Connection failed. " . $e->getMessage() . "\n";
+        }
+      }
+
+      public static function connectWithoutDb($verbose = 1)
+      {
+        try
+        {
+
+          self::config();
+
+          if (self::$driver == "mysql")
+          {
+            $conn = new \PDO("mysql:host=" . self::$server_host . ";charset=" . self::$db_charset, self::$db_user, self::$db_pass);
 
             //Activamos el modo error->exception de PDO:
             $conn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);

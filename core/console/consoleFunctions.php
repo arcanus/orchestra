@@ -352,7 +352,7 @@
     //Crea la tabla en la base de datos en base a la entidad
     public static function createEntityTable()
     {
-      $config = require './config/database.php';
+      $config = require(__DIR__ . '/../../config/database.php');
       $conn = \core\connection::connect();
       $nombre_campo = "";
       $campos = array();
@@ -373,7 +373,6 @@
         $nombre = strtolower(trim(fgets(STDIN)));
       }while(!$nombre);
 
-      //PRUEBAAAAAA
       self::verificarEntidad($nombre);
 
       echo "\n -> Nombre de campo / propiedad [presione enter para finalizar]: ";
@@ -721,10 +720,9 @@
     {
       try
       {
-        //SEGUIR ACA
         $db_config = include(__DIR__ . '/../../config/database.php');
 
-        $conn = \core\connection::connect();
+        $conn = \core\connection::connectWithoutDb();
 
         //CONSULTAMOS SI EXISTE LA BASE DE DATOS
         $stmt = $conn->query("SHOW DATABASES LIKE '" . $db_config['database'] . "'");
@@ -742,9 +740,13 @@
 
           if($eliminar_db == 'si')
           {
-            $conn->exec("DROP DATABASE " . $db_config['database'])
-              or die("\n -> Error eliminando la base de datos\n");
-            echo "\n * Base de datos eliminada.\n";
+            try {
+              $conn->exec("DROP DATABASE " . $db_config['database']);
+              echo "\n * Base de datos eliminada.\n";
+            } catch (Exception $e) {
+              "\n * Error: No se puedo eliminar la base de datos\n";
+            }
+
           }
           else
           {
@@ -818,16 +820,11 @@
     {
       try
       {
-
+        
       }
       catch (Exception $e)
       {
-        $db_config = require 'config/database.php';
 
-        if ($db_config['driver'] == "mysql")
-        {
-          $conn = new \PDO("mysql:host=" . $db_config['host'] . ";", $db_config['user'], $db_config['pass']);
-        }
 
       }
     }
