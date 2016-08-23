@@ -352,7 +352,7 @@
     //Crea la tabla en la base de datos en base a la entidad
     public static function createEntityTable()
     {
-      $config = require './config/database.php';
+      $config = require(__DIR__ . '/../../config/database.php');
       $conn = \core\connection::connect();
       $nombre_campo = "";
       $campos = array();
@@ -372,6 +372,58 @@
 
         $nombre = strtolower(trim(fgets(STDIN)));
       }while(!$nombre);
+
+      //Verifica que la tabla no exista en la base de datos
+      if (self::verificarExisteTabla($nombre))
+      {
+        $resp = "";
+
+        do
+        {
+          echo "\n -> La tabla a la que hace referencia la entidad que está a punto de crear ya existe.\n"; echo " -> ¿Desea eliminarla y volverla a crear? si/no: ";
+          $resp = strtolower(trim(fgets(STDIN)));
+        } while($resp != 'si' && $resp != 'no');
+
+        if($resp == 'no')
+        {
+          die("\n -> No se ha creado ninguna entidad.\n\n");
+        }
+
+        try
+        {
+
+          $conn->query("DROP TABLE " . $nombre);
+
+          echo "\n -> Tabla eliminada correctamente.\n";
+
+        }
+        catch (\PDOException $e)
+        {
+          die("\n -> Error eliminando la tabla\n\n");
+        }
+
+      }
+
+      //Verifica que el archivo de entidad no exista
+      if (self::verificarExisteArchivo($nombre))
+      {
+        $resp = "";
+
+        do
+        {
+          echo "\n -> El archivo de entidad que está a punto de crear ya existe.\n"; echo " -> ¿Desea eliminarlo y volverlo a crear? si/no: ";
+          $resp = strtolower(trim(fgets(STDIN)));
+        } while($resp != 'si' && $resp != 'no');
+
+        if($resp == 'no')
+        {
+          die("\n -> No se ha creado ninguna entidad.\n\n");
+        }
+
+        unlink(__DIR__ . "/../../entities/" . $nombre . "Entity.php");
+
+        echo "\n -> Archivo de entidad eliminado.\n";
+      }
 
       echo "\n -> Nombre de campo / propiedad [presione enter para finalizar]: ";
       $nombre_campo = strtolower(trim(fgets(STDIN)));
@@ -407,7 +459,7 @@
           echo "\n -> ¿El campo es único? [si/no]: ";
           $unico = trim(fgets(STDIN));
         } while($unico != 'si' && $unico != 'no');
-        
+
 
         echo "\n * RESUMEN:";
         echo "\n **********\n";
@@ -718,38 +770,49 @@
     {
       try
       {
+        $db_config = include(__DIR__ . '/../../config/database.php');
 
-        $db_config = require 'config/database.php';
+        $conn = \core\connection::connectWithoutDb();
 
-        if ($db_config['driver'] == "mysql")
+        //CONSULTAMOS SI EXISTE LA BASE DE DATOS
+        $stmt = $conn->query("SHOW DATABASES LIKE '" . $db_config['database'] . "'");
+        $databases = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        //SI NO EXISTE LA CREAMOS
+        if($databases)
         {
-          $conn = new \PDO("mysql:host=" . $db_config['host'] . ";", $db_config['user'], $db_config['pass']);
-
-          //Activamos el modo error->exception de PDO:
-          $conn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-          $conn->query("SET NAMES " . $db_config['charset']);
-
-          //CONSULTAMOS SI EXISTE LA TABLA
-          $stmt = $conn->query("SHOW DATABASES LIKE '" . $db_config['database'] . "'");
-          $databases = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-
-          //SI NO EXISTE LA CREAMOS
-          if($databases)
+          do
           {
             echo "\n * La base de datos ya existe.\n";
+            echo " * ¿Desea eliminarla? si/no: ";
+            $eliminar_db = strtolower(trim(fgets(STDIN)));
+          } while($eliminar_db != 'si' && $eliminar_db != 'no');
+
+          if($eliminar_db == 'si')
+          {
+            try {
+              $conn->exec("DROP DATABASE " . $db_config['database']);
+              echo "\n * Base de datos eliminada.\n";
+            } catch (Exception $e) {
+              "\n * Error: No se puedo eliminar la base de datos\n";
+            }
+
           }
           else
           {
-            $conn->exec("CREATE DATABASE " . $db_config['database'])
-              or die("Error creando la base de datos.\n");
-              echo "\n * Base de datos creada correctamente.\n\n";
+            return true;
           }
-
-          $conn = null;
-          $stmt = null;
-
         }
-      } catch (Exception $e) {
+
+        $conn->exec("CREATE DATABASE " . $db_config['database'])
+          or die("Error creando la base de datos.\n");
+        echo "\n * Base de datos creada correctamente.\n\n";
+
+        $conn = null;
+        $stmt = null;
+      }
+      catch (Exception $e)
+      {
         die("ERROR: " . $e->getMessage());
       }
 
@@ -776,7 +839,7 @@
       }
       catch (Exception $e)
       {
-
+        die("ERROR: " . $e->getMessage());
       }
 
     }
@@ -800,6 +863,52 @@
     public static function clearConsole()
     {
       echo shell_exec('clear');
+    }
+
+    //Verificar si existe la tabla de entidad.
+    private static function verificarExisteTabla($nombre)
+    {
+      try
+      {
+        $config = require(__DIR__ . '/../../config/database.php');
+        $conn = \core\connection::connect();
+        $stmt = $conn->query("SHOW TABLES FROM "
+                            . $config['database']
+                            . " WHERE Tables_in_" . $config['database']
+                            . " = '" . $nombre . "'"
+                          );
+
+        $resul = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        if($resul)
+        {
+          return true;
+        }
+        else
+        {
+          return false;
+        }
+
+      }
+      catch (Exception $e)
+      {
+        die("ERROR: " . $e->getMessage());
+      }
+    }
+
+    //Verificar si existe el archivo de entidad.
+    private function verificarExisteArchivo($nombre)
+    {
+      $file = __DIR__ . "/../../entities/" . $nombre . "Entity.php";
+
+      if(file_exists($file))
+      {
+        return true;
+      }
+      else
+      {
+        return false;
+      }
     }
   }
 ?>
