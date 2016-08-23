@@ -373,7 +373,52 @@
         $nombre = strtolower(trim(fgets(STDIN)));
       }while(!$nombre);
 
-      self::verificarEntidad($nombre);
+      //Verifica que la tabla no exista en la base de datos
+      if (self::verificarExisteTabla($nombre))
+      {
+        $resp = "";
+
+        do
+        {
+          echo "\n -> La tabla a la que hace referencia la entidad que está a punto de crear ya existe.\n"; echo " -> ¿Desea eliminarla y volverla a crear? si/no: ";
+          $resp = strtolower(trim(fgets(STDIN)));
+        } while($resp != 'si' && $resp != 'no');
+
+        if($resp == 'no')
+        {
+          die("\n -> No se ha creado ninguna entidad.\n\n");
+        }
+
+        if ($conn->exec("DROP TABLE " . $nombre))
+        {
+          echo "\n -> Tabla eliminada correctamente.\n";
+        }
+        else
+        {
+          die("\n -> Error eliminando tabla.\n");
+        }
+      }
+
+      //Verifica que el archivo de entidad no exista
+      if (self::verificarExisteArchivo($nombre))
+      {
+        $resp = "";
+
+        do
+        {
+          echo "\n -> El archivo de entidad que está a punto de crear ya existe.\n"; echo " -> ¿Desea eliminarlo y volverlo a crear? si/no: ";
+          $resp = strtolower(trim(fgets(STDIN)));
+        } while($resp != 'si' && $resp != 'no');
+
+        if($resp == 'no')
+        {
+          die("\n -> No se ha creado ninguna entidad.\n\n");
+        }
+
+        unlink(__DIR__ . "/../../entities/" . $nombre . "Entity.php");
+
+        echo "\n -> Archivo de entidad eliminado.\n";
+      }
 
       echo "\n -> Nombre de campo / propiedad [presione enter para finalizar]: ";
       $nombre_campo = strtolower(trim(fgets(STDIN)));
@@ -815,17 +860,49 @@
       echo shell_exec('clear');
     }
 
-    //Verificar si existe la tabla y el archivo de entidad.
-    private static function verificarEntidad($nombre)
+    //Verificar si existe la tabla de entidad.
+    private static function verificarExisteTabla($nombre)
     {
       try
       {
-        
+        $config = require(__DIR__ . '/../../config/database.php');
+        $conn = \core\connection::connect();
+        $stmt = $conn->query("SHOW TABLES FROM "
+                            . $config['database']
+                            . " WHERE Tables_in_" . $config['database']
+                            . " = '" . $nombre . "'"
+                          );
+
+        $resul = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        if($resul)
+        {
+          return true;
+        }
+        else
+        {
+          return false;
+        }
+
       }
       catch (Exception $e)
       {
+        die("ERROR: " . $e->getMessage());
+      }
+    }
 
+    //Verificar si existe el archivo de entidad.
+    private function verificarExisteArchivo($nombre)
+    {
+      $file = __DIR__ . "/../../entities/" . $nombre . "Entity.php";
 
+      if(file_exists($file))
+      {
+        return true;
+      }
+      else
+      {
+        return false;
       }
     }
   }
