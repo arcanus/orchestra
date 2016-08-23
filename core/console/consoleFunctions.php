@@ -389,14 +389,19 @@
           die("\n -> No se ha creado ninguna entidad.\n\n");
         }
 
-        if ($conn->exec("DROP TABLE " . $nombre))
+        try
         {
+
+          $conn->query("DROP TABLE " . $nombre);
+
           echo "\n -> Tabla eliminada correctamente.\n";
+
         }
-        else
+        catch (\PDOException $e)
         {
-          die("\n -> Error eliminando tabla.\n");
+          die("\n -> Error eliminando la tabla\n\n");
         }
+
       }
 
       //Verifica que el archivo de entidad no exista
