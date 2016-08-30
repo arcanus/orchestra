@@ -4,8 +4,8 @@
   class globalConfig
   {
     private static $env = 'dev';
-    private static $defaultController = 'baseController';
-    private static $defaultAction = 'indexAction';
+    private static $defaultController = 'base';
+    private static $defaultAction = 'index';
 
     public static function getEnv(): string
     {

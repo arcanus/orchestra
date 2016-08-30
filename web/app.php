@@ -1,5 +1,4 @@
 <?php
-  ini_set('display_errors', 1);
   include("../core/autoload.php");
 
   if(\config\globalConfig::getEnv() == 'dev')
@@ -8,20 +7,16 @@
     ini_set('display_errors', 1);
   }
 ?>
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>Vista por defecto</title>
-  </head>
-  <body>
 
-  <h1>Probandooooo!</h1>
+<?php
 
-  <?php
-    
+  $controller = $_GET['controller'] ?? \config\globalConfig::getDefaultController() . 'Controller';
+  $action = $_GET['action'] ?? \config\globalConfig::getDefaultAction() . 'Action';
 
-  ?>
+  $cont_path = "\\controllers\\$controller";
 
-  </body>
-</html>
+  $cont = new $cont_path;
+
+  $cont->indexAction();
+
+?>
