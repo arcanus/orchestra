@@ -5,7 +5,6 @@
     <title>Prueba Vista</title>
   </head>
   <body>
-    <h1>Esta es la vista IndexView :D</h1>
-    <h2>Bienvenido <?php getParam('nombre', $params); ?></h2>
+    <h1>Bienvenido a Orchestra</h1>
   </body>
 </html>

@@ -5,8 +5,8 @@
   {
 
     public function indexAction($par = null)
-    {      
-      renderView("base/indexView.php", array('nombre' => $par[0]));
+    {
+      renderView("base/indexView.php");
     }
 
   }

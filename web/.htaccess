@@ -19,18 +19,8 @@ Options FollowSymlinks
     RewriteRule ^([a-zA-Z0-9]+)/([a-zA-Z0-9]+)$ app.php?controller=$1&action=$2 [L]
     RewriteRule ^([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/$ app.php?controller=$1&action=$2 [L]
 
-    RewriteRule ^([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)$ app.php?controller=$1&action=$2&params=$3 [L]
-    RewriteRule ^([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/$ app.php?controller=$1&action=$2&params=$3 [L]
+    RewriteRule ^([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/([a-zA-Z0-9/]+)$ app.php?controller=$1&action=$2&params=$3 [L]
+    RewriteRule ^([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/([a-zA-Z0-9/]+)/$ app.php?controller=$1&action=$2&params=$3 [L]
 
     RewriteRule ^/app.php [L]
-</IfModule>
-
-<IfModule !mod_rewrite.c>
-    <IfModule mod_alias.c>
-        # When mod_rewrite is not available, we instruct a temporary redirect of
-        # the start page to the front controller explicitly so that the website
-        # and the generated links can still be used.
-        RedirectMatch 302 ^/$ /app.php/
-        # RedirectTemp cannot be used instead
-    </IfModule>
 </IfModule>
