@@ -10,17 +10,26 @@
 
 <?php
 
-  $controller = $_GET['controller'] ?? \config\globalConfig::getDefaultController() . 'Controller';
-  $action = $_GET['action'] ?? \config\globalConfig::getDefaultAction() . 'Action';
-  $par = $_GET['params'] ?? null;
+  $controller = $_GET['controller'] ?? null;
+  $action = $_GET['action'] ?? null;
+  $params = $_GET['params'] ?? null;
+
+  if(!isset($controller))
+    $controller = \config\globalConfig::getDefaultController() . 'Controller';
+  else
+    $controller .= 'Controller';
+
+  if(!isset($action))
+    $action = \config\globalConfig::getDefaultAction() . 'Action';
+  else
+    $action .= 'Action';
 
   $cont_path = "\\controllers\\$controller";
 
   $cont = new $cont_path;
 
+  $par_array = isset($params) ? explode("/", $params) : null;
 
-  $par_array = isset($par) ? explode("/", $par) : null;
-
-  $cont->indexAction($par_array);
+  $cont->$action($par_array);
 
 ?>

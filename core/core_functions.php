@@ -7,7 +7,7 @@
     }
 
     //Renderiza una vista.  El formato del valor $view debe ser controller/vista.
-    function renderView(string $view, array $params)
+    function renderView($view, $params = null)
     {
       include __DIR__ . '/../' .  '/views/' . $view;
     }

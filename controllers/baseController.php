@@ -4,12 +4,9 @@
   class baseController
   {
 
-    public function indexAction(array $par)
-    {
-      renderView("base/indexView.php", array(
-        'nombre'    => $par[0],
-        'apellido'  => $par[1]
-      ));
+    public function indexAction($par = null)
+    {      
+      renderView("base/indexView.php", array('nombre' => $par[0]));
     }
 
   }
