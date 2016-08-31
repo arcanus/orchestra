@@ -13,8 +13,8 @@ Options FollowSymlinks
     RewriteCond %{SCRIPT_FILENAME} !-f
 
     #Limpio las URLS
-    RewriteRule ^([a-zA-Z0-9]+)$ app.php?controller=base&action=index&params=$1 [L]
-    RewriteRule ^([a-zA-Z0-9]+)/$ app.php?controller=base&action=index&params=$1 [L]
+    RewriteRule ^([a-zA-Z0-9]+)$ app.php?controller=$1 [L]
+    RewriteRule ^([a-zA-Z0-9]+)/$ app.php?controller=$1 [L]
 
     RewriteRule ^([a-zA-Z0-9]+)/([a-zA-Z0-9]+)$ app.php?controller=$1&action=$2 [L]
     RewriteRule ^([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/$ app.php?controller=$1&action=$2 [L]
