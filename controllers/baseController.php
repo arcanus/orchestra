@@ -4,9 +4,12 @@
   class baseController
   {
 
-    public function indexAction()
+    public function indexAction(array $par)
     {
-      header("HTTP/1.0 404 Not Found");
+      renderView("base/indexView.php", array(
+        'nombre'    => $par[0],
+        'apellido'  => $par[1]
+      ));
     }
 
   }

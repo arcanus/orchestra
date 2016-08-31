@@ -12,11 +12,15 @@
 
   $controller = $_GET['controller'] ?? \config\globalConfig::getDefaultController() . 'Controller';
   $action = $_GET['action'] ?? \config\globalConfig::getDefaultAction() . 'Action';
+  $par = $_GET['params'] ?? null;
 
   $cont_path = "\\controllers\\$controller";
 
   $cont = new $cont_path;
 
-  $cont->indexAction();
+
+  $par_array = isset($par) ? explode("/", $par) : null;
+
+  $cont->indexAction($par_array);
 
 ?>
