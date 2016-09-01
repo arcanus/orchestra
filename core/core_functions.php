@@ -7,15 +7,23 @@
     }
 
     //Renderiza una vista.  El formato del valor $view debe ser controller/vista.
-    function renderView($view, $params = null)
+    /*function renderView($view, $params = null)
     {
       include __DIR__ . '/../' .  '/views/' . $view;
-    }
+  }*/
 
     //Escribe el valor de un parámetro
     function getParam(string $name, array $params)
     {
         echo $params[$name];
+    }
+
+    function renderView($view, $params)
+    {
+        $loader = new \Twig_Loader_Filesystem(\config\globalConfig::getTemplates());
+        $twig = new \Twig_Environment($loader);
+
+        echo $twig->render($view, $params);
     }
 
 ?>

@@ -7,6 +7,13 @@
     private static $defaultController = 'base';
     private static $defaultAction = 'index';
 
+    //Siempre que se cree un nuevo controlador con vistas propias en un nuevo directorio dentro de /views/ se debe agregar el nombre del mismo en este array;
+    private static $templates = array(
+      'templates',
+      'base'
+    );
+
+
     public static function getEnv(): string
     {
       return self::$env;
@@ -30,6 +37,19 @@
         'defaultAction'       =>  self::$defaultAction
       );
       return $config;
+    }
+
+    public static function getTemplates()
+    {
+      $templates_path = array();
+
+      foreach(self::$templates as $template)
+      {
+        $templates_path[] = getcwd() . '/../views/' . $template;
+      }
+
+      return $templates_path;
+
     }
 
   }

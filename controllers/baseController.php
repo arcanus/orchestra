@@ -6,7 +6,7 @@
 
     public function indexAction($par = null)
     {
-      renderView("base/indexView.php");
+        renderView('indexView.html.twig', array('nombre' => 'Paul'));
     }
 
   }

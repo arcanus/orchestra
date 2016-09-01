@@ -19,7 +19,8 @@
     },
     "require": {
         "php": ">=7.0",
-        "lichtner/fluentpdo": "^1.1"
+        "lichtner/fluentpdo": "^1.1",
+        "twig/twig": "~1.0"
     },
     "scripts": {
       "post-create-project-cmd": [
