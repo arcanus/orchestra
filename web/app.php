@@ -5,7 +5,7 @@
   {
     error_reporting(E_ALL);
     ini_set('display_errors', 1);
-  }  
+  }
 ?>
 
 <?php
@@ -26,7 +26,15 @@
 
   $cont_path = "\\controllers\\$controller";
 
-  $cont = new $cont_path;
+  if(!file_exists("../controllers/$controller.php"))
+  {
+    if (\config\globalConfig::getEnv() =='dev')
+      die("Error. No existe el controlador $controller");
+    else
+      die();
+  }
+
+  $cont = new $cont_path();
 
   $par_array = isset($params) ? explode("/", $params) : null;
 

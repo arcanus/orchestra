@@ -18,7 +18,7 @@
         echo $params[$name];
     }
 
-    function renderView($view, $params)
+    function renderView($view, $params = array())
     {
         $loader = new \Twig_Loader_Filesystem(\config\globalConfig::getTemplates());
         $twig = new \Twig_Environment($loader);

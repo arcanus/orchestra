@@ -4,9 +4,9 @@
   class baseController
   {
 
-    public function indexAction($par = null)
+    public function indexAction()
     {
-        renderView('indexView.html.twig', array('nombre' => 'Paul'));
+        renderView('indexView.html.twig');
     }
 
   }

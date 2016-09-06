@@ -9,6 +9,8 @@ Options FollowSymlinks
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
+    ErrorDocument 404 "<h1>Nada por aqui, nada por alla</h1>"
+
     RewriteCond %{SCRIPT_FILENAME} !-d
     RewriteCond %{SCRIPT_FILENAME} !-f
 
