@@ -2,6 +2,8 @@
 <html>
     <head>
         <meta charset="UTF-8" />
+        <meta name="description" content="">
+        <meta name="author" content="">
         <title>{% block title %}Orchestra Framework{% endblock %}</title>
         {% block styles %}
           <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -9,14 +11,13 @@
         <link rel="icon" href="favicon.png">
     </head>
     <body>
-        {% block body %}
+      {% block body %}
 
-        {% endblock %}
+      {% endblock %}
 
-        {% block javascripts %}{% endblock %}
+      {% block javascripts %}
+        <script src="/js/bootstrap.min.js"></script>
+      {% endblock %}
     </body>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
 
 </html>
